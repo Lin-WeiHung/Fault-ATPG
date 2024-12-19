@@ -1,0 +1,5 @@
+Dynamic Read Destructive Fault (dRDF) <xWyRy/~y/~y> <xRxRx/~x/~x>
+Dynamic Deceptive Read Destructive Fault (dDRDF) <xWyRy/~y/> <xRxRx/~x/>
+Dynamic Incorrect Read Fault (dIRF) <xWyRy/y/~y> <xRxRx/x/~x>
+Dynamic Read Destructive Coupling Fault (dCFrd) <x; yWzRz/z/~z> <x; zRzRz/z/~z>
+Dynamic Disturb Coupling Fault (dCFds) <xWyWt; z/~z/> <xWyRy; z/~z/> <xRxWy; z/~z/> <xRxRx; z/~z/>
