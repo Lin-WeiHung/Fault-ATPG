@@ -1,13 +1,10 @@
 CXX = g++
 CXXFLAGS = -g -std=c++17
 
-OURPUT_LIST = TimeC_test faultSimulator
+OURPUT_LIST = main
 
-TimeC_test: TimeC_test.cpp
-	$(CXX) $(CXXFLAGS) -o TimeC_test TimeC_test.cpp
-
-faultSimulator: faultSimulator.cpp faultSimulator.hpp
-	$(CXX) $(CXXFLAGS) -o faultSimulator faultSimulator.cpp
+com: faultSimulator.cpp parser.cpp main.cpp
+	$(CXX) $(CXXFLAGS) -o main faultSimulator.cpp parser.cpp main.cpp
 
 clean:
 	rm -f $(OURPUT_LIST)

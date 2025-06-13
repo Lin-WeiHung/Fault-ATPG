@@ -8,21 +8,21 @@
 #include <random>
 #include <algorithm>
 #include <array>
-#include <queue>
 #include <map>
-
-using namespace std;
+#include <unordered_map>
+#include <deque>
 
 constexpr int MAX_ADDR = 16;
 
 enum class OpType { READ, WRITE };
-struct SingleOp {
+typedef struct singleOp {
     OpType type;
     int    value;   // 0 or 1
-};
+    int    order;   // 在整個March test 中的順序
+} SingleOp;
 
 // record each operation on a cell
-typedef struct OperationRecord {
+typedef struct operationRecord {
     int beforeValue;    // cell value before op
     SingleOp op;        // the operation
     int afterValue;     // cell value after op
@@ -30,43 +30,45 @@ typedef struct OperationRecord {
 
 // Fault subcase definition
 enum class FaultType { SINGLE, COUPLING };
-struct FaultSubcase {
+typedef struct faultSubcase {
     FaultType type;
     int        A;       // 0: aggr<vic; 1: aggr>vic; -1 none
     int        AI;      // required aggressor value
     int        VI;      // required victim value
-    vector<SingleOp> seqA;
-    vector<SingleOp> seqV;
+    std::vector<SingleOp> seqA;
+    std::vector<SingleOp> seqV;
     SingleOp         opD;
     int              finalF;
     int              finalR;
-};
+} FaultSubcase;
 
 // March test element
-typedef vector<SingleOp> MarchElement;
+typedef struct marchElement {
+    bool addr_order; // true: b or a, false: d
+    std::vector<SingleOp> ops; // operations on this element
+} MarchElement;
 
 // Cell simulation with queue-based FSM
 class Cell {
 public:
     Cell();
-    void installFault(const FaultSubcase* f);
+    void init(int init);
+    void installFault(const std::vector<SingleOp>& seq, int TriggerI, int finalF, int finalR);
+    void installFault(int TriggerI, int finalF, int finalR);
     void clearQueue();
-    void applyOp(const SingleOp& op);
-    int  read();
-    void write(int v);
-    void setLockResetValue(int resetVal);
-    void setMaxQueueSize(size_t sz);
+    bool checkTrigger();
+    int applyOp(const SingleOp& op);
 private:
     int value;
-    const FaultSubcase* fault;
-    queue<OperationRecord> history;
+    int TriggerValue;
+    std::vector<SingleOp> faultSeq;
+    int faultValue;
+    int finalReadValue;
+    std::deque<OperationRecord> history;
     size_t maxQueue;
-    bool triggered;
-    
     void recordOperation(const SingleOp& op, int before);
-    bool checkTrigger();
     void triggerFault();
-    bool historyMatches(const vector<SingleOp>& seq) const;
+    bool historyMatches() const;
 };
 
 // Memory holds 16 cells and routes operations
@@ -76,35 +78,39 @@ public:
     void installFault(const FaultSubcase* f, int vicAddr, int aggrAddr);
     void clearElementQueues();
     void writeCell(int addr, int v);
-    int  readCell(int addr);
+    int  readCell(int addr, int v);
 private:
-    array<Cell, MAX_ADDR> cells;
-    int victimAddr;
-    int aggressorAddr;
+    std::array<Cell, MAX_ADDR> cells;
 };
 
 // Fault primitive and simulation
-struct Syndrome {
+typedef struct opSynd {
+    opSynd() : detected(false) {}
     bool detected; 
-    vector<int> addresses;
-};
-struct FaultPrimitive {
-    string name;
-    vector<FaultSubcase> subs;
-};
+    std::vector<int> addresses;
+} OpSynd;
+
+typedef struct faultPrimitive {
+    std::string name;
+    std::vector<FaultSubcase> subs;
+} FaultPrimitive;
+
+typedef std::map<int, OpSynd> SubcaseSynd;
+typedef std::map<std::string, std::vector<SubcaseSynd>> Syndromes;
 
 class FaultSimulator {
 public:
-    FaultSimulator(const vector<MarchElement>& m,
-                   const vector<FaultPrimitive>& f);
-    void runAll();
+    FaultSimulator(const std::vector<MarchElement>& m,
+                   const std::vector<FaultPrimitive>& f);
+    Syndromes& runAll();
 private:
-    vector<MarchElement> marchSeq;
-    vector<FaultPrimitive> faults;
-    mt19937 rng;
-
-    pair<int,int> chooseAggVictim(const FaultSubcase& sc);
-    void simulateSubcase(const FaultSubcase& sc, int init);
+    std::vector<MarchElement> marchSeq;
+    std::vector<FaultPrimitive> faults;
+    std::mt19937 rng;
+    Syndromes All_syndromes;
+    std::vector<int> iterateAddresses(bool addr_order);
+    std::pair<int,int> chooseAggVictim(const FaultSubcase& sc);
+    void simulateSubcase(std::vector<SubcaseSynd>& subcaseSynd_vec, const FaultSubcase& sc, int init);
 };
 
 #endif // FAULT_SIMULATOR_SYSTEM_HPP
