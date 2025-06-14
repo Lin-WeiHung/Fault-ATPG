@@ -5,12 +5,12 @@
 // -------------------------------
 
 Cell::Cell()
-    : value(0), TriggerValue(-1), maxQueue(0), faultValue(-1), finalReadValue(-1) {
+    : cell_value(0), TriggerValue(-1), maxQueue(0), faultValue(-1), finalReadValue(-1) {
 }
 
 void Cell::init(int init) {
     // 初始化 cell value
-    value = init;
+    cell_value = init;
     TriggerValue = -1; // 初始無觸發值
     faultValue = -1; // 初始無 fault 觸發值
     finalReadValue = -1; // 初始無讀取最終值
@@ -54,7 +54,7 @@ void Cell::recordOperation(const SingleOp& op, int before) {
     OperationRecord rec;
     rec.beforeValue = before;
     rec.op = op;
-    rec.afterValue = value; // current value after op
+    rec.afterValue = cell_value; // current value after op
     history.push_back(rec);
     if(history.size() > maxQueue) history.pop_front();
 }
@@ -84,7 +84,7 @@ bool Cell::checkTrigger() {
     }
     // 空 seq 但 faultValue != -1 時，直接比對 current value
     if(faultSeq.empty() && TriggerValue != -1) {
-        if(value == TriggerValue) {
+        if(cell_value == TriggerValue) {
             return true;
         }
         return false;
@@ -101,13 +101,13 @@ void Cell::triggerFault() {
         return; // 非victim cell 或未設定 faultValue
     }
     // 觸發 Fault: 強制將 cell.value 改為 finalF
-    value = faultValue; // faultFinalValue 需另行存入
+    cell_value = faultValue; // faultFinalValue 需另行存入
 }
 
 int Cell::applyOp(const SingleOp& op) {
-    int before = value;
+    int before = cell_value;
     if(op.type == OpType::WRITE) {
-        value = op.value; // 寫入操作直接更新 value
+        cell_value = op.value; // 寫入操作直接更新 value
     }
     // 記錄並嘗試觸發
     recordOperation(op, before);
@@ -115,12 +115,12 @@ int Cell::applyOp(const SingleOp& op) {
         triggerFault();
         if(op.type == OpType::READ) {
             // 如果是讀取操作，則返回觸發後的值
-            return finalReadValue != -1 ? finalReadValue : value;
+            return finalReadValue != -1 ? finalReadValue : cell_value;
         }
     }
     if (op.type == OpType::READ) {
         // 如果是讀取操作，則返回當前值
-        return value;
+        return cell_value;
     }
     // 如果是寫入操作，則不返回值
     return -1; // 寫入操作不返回值

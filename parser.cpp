@@ -163,12 +163,34 @@ void Parser::parserOutSyndrome(const Syndromes& All_syndromes, const std::vector
             if (i / 2 < fault.subs.size()) {
                 const auto& sub = fault.subs[i / 2];
                 if (sub.type == FaultType::COUPLING) {
-                    ofs << "A: " << sub.A << ", AI: " << sub.AI << ", VI: " << sub.VI << "\n";
-                } else {
-                    ofs << "    VI: " << sub.VI << "\n";
+                    if (sub.A == 1) {
+                        ofs << "A > V,  ";
+                    } else if (sub.A == 0) {
+                        ofs << "A < V,  ";
+                    } else {
+                        ofs << "No aggressor, ";
+                    }
+                    ofs << "< " << sub.AI;
+                    for (const auto& op : sub.seqA) {
+                        ofs << (op.type == OpType::READ ? "R" : "W") << op.value;
+                    }
+                    ofs << "; " << sub.VI;
+                    for (const auto& op : sub.seqV) {
+                        ofs << (op.type == OpType::READ ? "R" : "W") << op.value;
+                    }
+                } else if (sub.type == FaultType::SINGLE) {
+                    ofs << "Single, < " << sub.VI;
+                    for (const auto& op : sub.seqV) {
+                        ofs << (op.type == OpType::READ ? "R" : "W") << op.value;
+                    }
                 }
-            } else {
-                ofs << "\n";
+                ofs << "   /   " << sub.finalF << "   /   ";
+                if (sub.finalR == -1) {
+                    ofs << "-";
+                } else {
+                    ofs << sub.finalR;
+                }
+                ofs << " >\n";
             }
             // 印出init 0 和 1 的syndrome
             for (int init = 0; init < 2; ++init) {

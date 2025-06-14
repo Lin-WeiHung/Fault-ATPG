@@ -2,14 +2,12 @@
 #define FAULT_SIMULATOR_SYSTEM_HPP
 
 #include <iostream>
-#include <fstream>
 #include <vector>
 #include <string>
 #include <random>
 #include <algorithm>
 #include <array>
 #include <map>
-#include <unordered_map>
 #include <deque>
 
 constexpr int MAX_ADDR = 16;
@@ -59,7 +57,7 @@ public:
     bool checkTrigger();
     int applyOp(const SingleOp& op);
 private:
-    int value;
+    int cell_value;
     int TriggerValue;
     std::vector<SingleOp> faultSeq;
     int faultValue;

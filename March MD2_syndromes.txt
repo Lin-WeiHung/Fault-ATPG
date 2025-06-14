@@ -1,0 +1,966 @@
+Fault: Stuck-at Fault (SAF)
+  Subcase 1: Single, < 0W1   /   0   /   - >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 2: Single, < 1W0   /   1   /   - >
+    Init 0 syndrome: 00011011001000011110111100001 (0x3643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+
+Fault: Transition Fault (TF)
+  Subcase 1: Single, < 0W1   /   0   /   - >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 2: Single, < 1W0   /   1   /   - >
+    Init 0 syndrome: 00011011001000011110111100001 (0x3643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+
+Fault: Write Disturb Fault (WDF)
+  Subcase 1: Single, < 0W0   /   1   /   - >
+    Init 0 syndrome: 10011011000000001110011100000 (0x13601ce0)
+    Init 1 syndrome: 00011011000000001110011100000 (0x3601ce0)
+  Subcase 2: Single, < 1W1   /   0   /   - >
+    Init 0 syndrome: 01100000110011100000000001110 (0xc19c00e)
+    Init 1 syndrome: 01100000110011100000000001110 (0xc19c00e)
+
+Fault: Read Destructive Fault (RDF)
+  Subcase 1: Single, < 0R0   /   1   /   1 >
+    Init 0 syndrome: 10011011001000011110111100001 (0x13643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 2: Single, < 1R1   /   0   /   0 >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+
+Fault: Deceptive Read Destructive Fault (DRDF)
+  Subcase 1: Single, < 0R0   /   1   /   0 >
+    Init 0 syndrome: 00000000000000000110001100000 (0xc60)
+    Init 1 syndrome: 00000000000000000110001100000 (0xc60)
+  Subcase 2: Single, < 1R1   /   0   /   1 >
+    Init 0 syndrome: 00000000000001100000000000110 (0xc006)
+    Init 1 syndrome: 00000000000001100000000000110 (0xc006)
+
+Fault: Incorrect Read Fault (IRF)
+  Subcase 1: Single, < 0R0   /   0   /   1 >
+    Init 0 syndrome: 10011011001000011110111100001 (0x13643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 2: Single, < 1R1   /   1   /   0 >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+
+Fault: State Coupling Fault (CFst)
+  Subcase 1: A < V,  < 0; 0   /   1   /   - >
+    Init 0 syndrome: 10011011001000011110111100001 (0x13643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 2: A < V,  < 0; 1   /   0   /   - >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 3: A < V,  < 1; 0   /   1   /   - >
+    Init 0 syndrome: 10011011001000011110111100001 (0x13643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 4: A < V,  < 1; 1   /   0   /   - >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 5: A > V,  < 0; 0   /   1   /   - >
+    Init 0 syndrome: 10011011001000011110111100001 (0x13643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 6: A > V,  < 0; 1   /   0   /   - >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 7: A > V,  < 1; 0   /   1   /   - >
+    Init 0 syndrome: 10011011001000011110111100001 (0x13643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 8: A > V,  < 1; 1   /   0   /   - >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+
+Fault: Transition Coupling Fault (CFtr)
+  Subcase 1: A < V,  < 0; 0W1   /   0   /   - >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 2: A < V,  < 0; 1W0   /   1   /   - >
+    Init 0 syndrome: 00011011001000011110111100001 (0x3643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 3: A < V,  < 1; 0W1   /   0   /   - >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 4: A < V,  < 1; 1W0   /   1   /   - >
+    Init 0 syndrome: 00011011001000011110111100001 (0x3643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 5: A > V,  < 0; 0W1   /   0   /   - >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 6: A > V,  < 0; 1W0   /   1   /   - >
+    Init 0 syndrome: 00011011001000011110111100001 (0x3643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 7: A > V,  < 1; 0W1   /   0   /   - >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 8: A > V,  < 1; 1W0   /   1   /   - >
+    Init 0 syndrome: 00011011001000011110111100001 (0x3643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+
+Fault: Write Destructive Coupling Fault (CFwd)
+  Subcase 1: A < V,  < 0; 0W0   /   1   /   - >
+    Init 0 syndrome: 10011011000000001110011100000 (0x13601ce0)
+    Init 1 syndrome: 00011011000000001110011100000 (0x3601ce0)
+  Subcase 2: A < V,  < 0; 1W1   /   0   /   - >
+    Init 0 syndrome: 01100000110011100000000001110 (0xc19c00e)
+    Init 1 syndrome: 01100000110011100000000001110 (0xc19c00e)
+  Subcase 3: A < V,  < 1; 0W0   /   1   /   - >
+    Init 0 syndrome: 10011011000000001110011100000 (0x13601ce0)
+    Init 1 syndrome: 00011011000000001110011100000 (0x3601ce0)
+  Subcase 4: A < V,  < 1; 1W1   /   0   /   - >
+    Init 0 syndrome: 01100000110011100000000001110 (0xc19c00e)
+    Init 1 syndrome: 01100000110011100000000001110 (0xc19c00e)
+  Subcase 5: A > V,  < 0; 0W0   /   1   /   - >
+    Init 0 syndrome: 10011011000000001110011100000 (0x13601ce0)
+    Init 1 syndrome: 00011011000000001110011100000 (0x3601ce0)
+  Subcase 6: A > V,  < 0; 1W1   /   0   /   - >
+    Init 0 syndrome: 01100000110011100000000001110 (0xc19c00e)
+    Init 1 syndrome: 01100000110011100000000001110 (0xc19c00e)
+  Subcase 7: A > V,  < 1; 0W0   /   1   /   - >
+    Init 0 syndrome: 10011011000000001110011100000 (0x13601ce0)
+    Init 1 syndrome: 00011011000000001110011100000 (0x3601ce0)
+  Subcase 8: A > V,  < 1; 1W1   /   0   /   - >
+    Init 0 syndrome: 01100000110011100000000001110 (0xc19c00e)
+    Init 1 syndrome: 01100000110011100000000001110 (0xc19c00e)
+
+Fault: Read Destructive Coupling Fault (CFrd)
+  Subcase 1: A < V,  < 0; 0R0   /   1   /   1 >
+    Init 0 syndrome: 10011011001000011110111100001 (0x13643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 2: A < V,  < 0; 1R1   /   0   /   0 >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 3: A < V,  < 1; 0R0   /   1   /   1 >
+    Init 0 syndrome: 10011011001000011110111100001 (0x13643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 4: A < V,  < 1; 1R1   /   0   /   0 >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 5: A > V,  < 0; 0R0   /   1   /   1 >
+    Init 0 syndrome: 10011011001000011110111100001 (0x13643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 6: A > V,  < 0; 1R1   /   0   /   0 >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 7: A > V,  < 1; 0R0   /   1   /   1 >
+    Init 0 syndrome: 10011011001000011110111100001 (0x13643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 8: A > V,  < 1; 1R1   /   0   /   0 >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+
+Fault: Deceptive Read Destructive Coupling Fault (CFdrd)
+  Subcase 1: A < V,  < 0; 0R0   /   1   /   0 >
+    Init 0 syndrome: 00000000000000000110001100000 (0xc60)
+    Init 1 syndrome: 00000000000000000110001100000 (0xc60)
+  Subcase 2: A < V,  < 0; 1R1   /   0   /   1 >
+    Init 0 syndrome: 00000000000001100000000000110 (0xc006)
+    Init 1 syndrome: 00000000000001100000000000110 (0xc006)
+  Subcase 3: A < V,  < 1; 0R0   /   1   /   0 >
+    Init 0 syndrome: 00000000000000000110001100000 (0xc60)
+    Init 1 syndrome: 00000000000000000110001100000 (0xc60)
+  Subcase 4: A < V,  < 1; 1R1   /   0   /   1 >
+    Init 0 syndrome: 00000000000001100000000000110 (0xc006)
+    Init 1 syndrome: 00000000000001100000000000110 (0xc006)
+  Subcase 5: A > V,  < 0; 0R0   /   1   /   0 >
+    Init 0 syndrome: 00000000000000000110001100000 (0xc60)
+    Init 1 syndrome: 00000000000000000110001100000 (0xc60)
+  Subcase 6: A > V,  < 0; 1R1   /   0   /   1 >
+    Init 0 syndrome: 00000000000001100000000000110 (0xc006)
+    Init 1 syndrome: 00000000000001100000000000110 (0xc006)
+  Subcase 7: A > V,  < 1; 0R0   /   1   /   0 >
+    Init 0 syndrome: 00000000000000000110001100000 (0xc60)
+    Init 1 syndrome: 00000000000000000110001100000 (0xc60)
+  Subcase 8: A > V,  < 1; 1R1   /   0   /   1 >
+    Init 0 syndrome: 00000000000001100000000000110 (0xc006)
+    Init 1 syndrome: 00000000000001100000000000110 (0xc006)
+
+Fault: Incorrect Read Coupling Fault (CFir)
+  Subcase 1: A < V,  < 0; 0R0   /   0   /   1 >
+    Init 0 syndrome: 10011011001000011110111100001 (0x13643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 2: A < V,  < 0; 1R1   /   1   /   0 >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 3: A < V,  < 1; 0R0   /   0   /   1 >
+    Init 0 syndrome: 10011011001000011110111100001 (0x13643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 4: A < V,  < 1; 1R1   /   1   /   0 >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 5: A > V,  < 0; 0R0   /   0   /   1 >
+    Init 0 syndrome: 10011011001000011110111100001 (0x13643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 6: A > V,  < 0; 1R1   /   1   /   0 >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 7: A > V,  < 1; 0R0   /   0   /   1 >
+    Init 0 syndrome: 10011011001000011110111100001 (0x13643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 8: A > V,  < 1; 1R1   /   1   /   0 >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+
+Fault: Disturb Coupling Fault (CFds)
+  Subcase 1: A < V,  < 0R0; 0   /   1   /   - >
+    Init 0 syndrome: 10011011001000011110111100001 (0x13643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 2: A < V,  < 0R0; 1   /   0   /   - >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 3: A < V,  < 1R1; 0   /   1   /   - >
+    Init 0 syndrome: 10011011001000011110111100001 (0x13643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 4: A < V,  < 1R1; 1   /   0   /   - >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 5: A > V,  < 0R0; 0   /   1   /   - >
+    Init 0 syndrome: 10011011001000011110111100001 (0x13643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 6: A > V,  < 0R0; 1   /   0   /   - >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 7: A > V,  < 1R1; 0   /   1   /   - >
+    Init 0 syndrome: 10011011001000011110111100001 (0x13643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 8: A > V,  < 1R1; 1   /   0   /   - >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 9: A < V,  < 0W1; 0   /   1   /   - >
+    Init 0 syndrome: 10011011001000011110111100001 (0x13643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 10: A < V,  < 0W1; 1   /   0   /   - >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 11: A < V,  < 1W0; 0   /   1   /   - >
+    Init 0 syndrome: 10011011001000011110111100001 (0x13643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 12: A < V,  < 1W0; 1   /   0   /   - >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 13: A > V,  < 0W1; 0   /   1   /   - >
+    Init 0 syndrome: 10011011001000011110111100001 (0x13643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 14: A > V,  < 0W1; 1   /   0   /   - >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 15: A > V,  < 1W0; 0   /   1   /   - >
+    Init 0 syndrome: 10011011001000011110111100001 (0x13643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 16: A > V,  < 1W0; 1   /   0   /   - >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 17: A < V,  < 0W0; 0   /   1   /   - >
+    Init 0 syndrome: 10011011001000011110111100001 (0x13643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 18: A < V,  < 0W0; 1   /   0   /   - >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 19: A < V,  < 1W1; 0   /   1   /   - >
+    Init 0 syndrome: 10011011001000011110111100001 (0x13643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 20: A < V,  < 1W1; 1   /   0   /   - >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 21: A > V,  < 0W0; 0   /   1   /   - >
+    Init 0 syndrome: 10011011001000011110111100001 (0x13643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 22: A > V,  < 0W0; 1   /   0   /   - >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 23: A > V,  < 1W1; 0   /   1   /   - >
+    Init 0 syndrome: 10011011001000011110111100001 (0x13643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 24: A > V,  < 1W1; 1   /   0   /   - >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+
+Fault: dynamic Read Destructive Fault (dRDF)
+  Subcase 1: Single, < 0W0   /   1   /   1 >
+    Init 0 syndrome: 10011011000000001110011100000 (0x13601ce0)
+    Init 1 syndrome: 00011011000000001110011100000 (0x3601ce0)
+  Subcase 2: Single, < 1W1   /   0   /   0 >
+    Init 0 syndrome: 01100000110011100000000001110 (0xc19c00e)
+    Init 1 syndrome: 01100000110011100000000001110 (0xc19c00e)
+  Subcase 3: Single, < 0W1   /   0   /   0 >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 4: Single, < 1W0   /   1   /   1 >
+    Init 0 syndrome: 00011011001000011110111100001 (0x3643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 5: Single, < 0R0   /   1   /   1 >
+    Init 0 syndrome: 10011011001000011110111100001 (0x13643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 6: Single, < 1R1   /   0   /   0 >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+
+Fault: dynamic Deceptive Read Destructive Fault (dDRDF)
+  Subcase 1: Single, < 0W0   /   1   /   0 >
+    Init 0 syndrome: 10011011000000001110011100000 (0x13601ce0)
+    Init 1 syndrome: 00011011000000001110011100000 (0x3601ce0)
+  Subcase 2: Single, < 1W1   /   0   /   1 >
+    Init 0 syndrome: 01100000110011100000000001110 (0xc19c00e)
+    Init 1 syndrome: 01100000110011100000000001110 (0xc19c00e)
+  Subcase 3: Single, < 0W1   /   0   /   1 >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 4: Single, < 1W0   /   1   /   0 >
+    Init 0 syndrome: 00011011001000011110111100001 (0x3643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 5: Single, < 0R0   /   1   /   0 >
+    Init 0 syndrome: 00000000000000000110001100000 (0xc60)
+    Init 1 syndrome: 00000000000000000110001100000 (0xc60)
+  Subcase 6: Single, < 1R1   /   0   /   1 >
+    Init 0 syndrome: 00000000000001100000000000110 (0xc006)
+    Init 1 syndrome: 00000000000001100000000000110 (0xc006)
+
+Fault: dynamic Incorrect Read Fault (dIRF)
+  Subcase 1: Single, < 0W0   /   0   /   1 >
+    Init 0 syndrome: undetected
+    Init 1 syndrome: undetected
+  Subcase 2: Single, < 1W1   /   1   /   0 >
+    Init 0 syndrome: undetected
+    Init 1 syndrome: undetected
+  Subcase 3: Single, < 0W1   /   1   /   0 >
+    Init 0 syndrome: undetected
+    Init 1 syndrome: undetected
+  Subcase 4: Single, < 1W0   /   0   /   1 >
+    Init 0 syndrome: undetected
+    Init 1 syndrome: undetected
+  Subcase 5: Single, < 0R0   /   0   /   1 >
+    Init 0 syndrome: 10011011001000011110111100001 (0x13643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 6: Single, < 1R1   /   1   /   0 >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+
+Fault: dynamic Transition Fault (dTF)
+  Subcase 1: Single, < 0W1   /   0   /   - >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 2: Single, < 1W0   /   1   /   - >
+    Init 0 syndrome: 00011011001000011110111100001 (0x3643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 3: Single, < 0W1   /   0   /   - >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 4: Single, < 1W0   /   1   /   - >
+    Init 0 syndrome: 00011011001000011110111100001 (0x3643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 5: Single, < 0R0   /   0   /   - >
+    Init 0 syndrome: undetected
+    Init 1 syndrome: undetected
+  Subcase 6: Single, < 1R1   /   1   /   - >
+    Init 0 syndrome: undetected
+    Init 1 syndrome: undetected
+
+Fault: dynamic Write Disturb Fault (dWDF)
+  Subcase 1: Single, < 0W0   /   1   /   - >
+    Init 0 syndrome: 10011011000000001110011100000 (0x13601ce0)
+    Init 1 syndrome: 00011011000000001110011100000 (0x3601ce0)
+  Subcase 2: Single, < 1W1   /   0   /   - >
+    Init 0 syndrome: 01100000110011100000000001110 (0xc19c00e)
+    Init 1 syndrome: 01100000110011100000000001110 (0xc19c00e)
+  Subcase 3: Single, < 0W1   /   0   /   - >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 4: Single, < 1W0   /   1   /   - >
+    Init 0 syndrome: 00011011001000011110111100001 (0x3643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 5: Single, < 0R0   /   1   /   - >
+    Init 0 syndrome: 10011011001000011110111100001 (0x13643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 6: Single, < 1R1   /   0   /   - >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+
+Fault: dynamic Read Destructive Coupling Fault (dCFrd)
+  Subcase 1: A < V,  < 0; 0W0   /   1   /   1 >
+    Init 0 syndrome: 10011011000000001110011100000 (0x13601ce0)
+    Init 1 syndrome: 00011011000000001110011100000 (0x3601ce0)
+  Subcase 2: A < V,  < 0; 1W0   /   1   /   1 >
+    Init 0 syndrome: 00011011001000011110111100001 (0x3643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 3: A < V,  < 1; 0W0   /   1   /   1 >
+    Init 0 syndrome: 10011011000000001110011100000 (0x13601ce0)
+    Init 1 syndrome: 00011011000000001110011100000 (0x3601ce0)
+  Subcase 4: A < V,  < 1; 1W0   /   1   /   1 >
+    Init 0 syndrome: 00011011001000011110111100001 (0x3643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 5: A > V,  < 0; 0W0   /   1   /   1 >
+    Init 0 syndrome: 10011011000000001110011100000 (0x13601ce0)
+    Init 1 syndrome: 00011011000000001110011100000 (0x3601ce0)
+  Subcase 6: A > V,  < 0; 1W0   /   1   /   1 >
+    Init 0 syndrome: 00011011001000011110111100001 (0x3643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 7: A > V,  < 1; 0W0   /   1   /   1 >
+    Init 0 syndrome: 10011011000000001110011100000 (0x13601ce0)
+    Init 1 syndrome: 00011011000000001110011100000 (0x3601ce0)
+  Subcase 8: A > V,  < 1; 1W0   /   1   /   1 >
+    Init 0 syndrome: 00011011001000011110111100001 (0x3643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 9: A < V,  < 0; 0W1   /   0   /   0 >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 10: A < V,  < 0; 1W1   /   0   /   0 >
+    Init 0 syndrome: 01100000110011100000000001110 (0xc19c00e)
+    Init 1 syndrome: 01100000110011100000000001110 (0xc19c00e)
+  Subcase 11: A < V,  < 1; 0W1   /   0   /   0 >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 12: A < V,  < 1; 1W1   /   0   /   0 >
+    Init 0 syndrome: 01100000110011100000000001110 (0xc19c00e)
+    Init 1 syndrome: 01100000110011100000000001110 (0xc19c00e)
+  Subcase 13: A > V,  < 0; 0W1   /   0   /   0 >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 14: A > V,  < 0; 1W1   /   0   /   0 >
+    Init 0 syndrome: 01100000110011100000000001110 (0xc19c00e)
+    Init 1 syndrome: 01100000110011100000000001110 (0xc19c00e)
+  Subcase 15: A > V,  < 1; 0W1   /   0   /   0 >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 16: A > V,  < 1; 1W1   /   0   /   0 >
+    Init 0 syndrome: 01100000110011100000000001110 (0xc19c00e)
+    Init 1 syndrome: 01100000110011100000000001110 (0xc19c00e)
+  Subcase 17: A < V,  < 0; 0R0   /   1   /   1 >
+    Init 0 syndrome: 10011011001000011110111100001 (0x13643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 18: A < V,  < 0; 1R1   /   0   /   0 >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 19: A < V,  < 1; 0R0   /   1   /   1 >
+    Init 0 syndrome: 10011011001000011110111100001 (0x13643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 20: A < V,  < 1; 1R1   /   0   /   0 >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 21: A > V,  < 0; 0R0   /   1   /   1 >
+    Init 0 syndrome: 10011011001000011110111100001 (0x13643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 22: A > V,  < 0; 1R1   /   0   /   0 >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 23: A > V,  < 1; 0R0   /   1   /   1 >
+    Init 0 syndrome: 10011011001000011110111100001 (0x13643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 24: A > V,  < 1; 1R1   /   0   /   0 >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+
+Fault: dynamic Deceptive Read Destructive Coupling Fault (dCFdrd)
+  Subcase 1: A < V,  < 0; 0W0   /   1   /   0 >
+    Init 0 syndrome: 10011011000000001110011100000 (0x13601ce0)
+    Init 1 syndrome: 00011011000000001110011100000 (0x3601ce0)
+  Subcase 2: A < V,  < 0; 1W0   /   1   /   0 >
+    Init 0 syndrome: 00011011001000011110111100001 (0x3643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 3: A < V,  < 1; 0W0   /   1   /   0 >
+    Init 0 syndrome: 10011011000000001110011100000 (0x13601ce0)
+    Init 1 syndrome: 00011011000000001110011100000 (0x3601ce0)
+  Subcase 4: A < V,  < 1; 1W0   /   1   /   0 >
+    Init 0 syndrome: 00011011001000011110111100001 (0x3643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 5: A > V,  < 0; 0W0   /   1   /   0 >
+    Init 0 syndrome: 10011011000000001110011100000 (0x13601ce0)
+    Init 1 syndrome: 00011011000000001110011100000 (0x3601ce0)
+  Subcase 6: A > V,  < 0; 1W0   /   1   /   0 >
+    Init 0 syndrome: 00011011001000011110111100001 (0x3643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 7: A > V,  < 1; 0W0   /   1   /   0 >
+    Init 0 syndrome: 10011011000000001110011100000 (0x13601ce0)
+    Init 1 syndrome: 00011011000000001110011100000 (0x3601ce0)
+  Subcase 8: A > V,  < 1; 1W0   /   1   /   0 >
+    Init 0 syndrome: 00011011001000011110111100001 (0x3643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 9: A < V,  < 0; 0W1   /   0   /   1 >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 10: A < V,  < 0; 1W1   /   0   /   1 >
+    Init 0 syndrome: 01100000110011100000000001110 (0xc19c00e)
+    Init 1 syndrome: 01100000110011100000000001110 (0xc19c00e)
+  Subcase 11: A < V,  < 1; 0W1   /   0   /   1 >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 12: A < V,  < 1; 1W1   /   0   /   1 >
+    Init 0 syndrome: 01100000110011100000000001110 (0xc19c00e)
+    Init 1 syndrome: 01100000110011100000000001110 (0xc19c00e)
+  Subcase 13: A > V,  < 0; 0W1   /   0   /   1 >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 14: A > V,  < 0; 1W1   /   0   /   1 >
+    Init 0 syndrome: 01100000110011100000000001110 (0xc19c00e)
+    Init 1 syndrome: 01100000110011100000000001110 (0xc19c00e)
+  Subcase 15: A > V,  < 1; 0W1   /   0   /   1 >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 16: A > V,  < 1; 1W1   /   0   /   1 >
+    Init 0 syndrome: 01100000110011100000000001110 (0xc19c00e)
+    Init 1 syndrome: 01100000110011100000000001110 (0xc19c00e)
+  Subcase 17: A < V,  < 0; 0R0   /   1   /   0 >
+    Init 0 syndrome: 00000000000000000110001100000 (0xc60)
+    Init 1 syndrome: 00000000000000000110001100000 (0xc60)
+  Subcase 18: A < V,  < 0; 1R1   /   0   /   1 >
+    Init 0 syndrome: 00000000000001100000000000110 (0xc006)
+    Init 1 syndrome: 00000000000001100000000000110 (0xc006)
+  Subcase 19: A < V,  < 1; 0R0   /   1   /   0 >
+    Init 0 syndrome: 00000000000000000110001100000 (0xc60)
+    Init 1 syndrome: 00000000000000000110001100000 (0xc60)
+  Subcase 20: A < V,  < 1; 1R1   /   0   /   1 >
+    Init 0 syndrome: 00000000000001100000000000110 (0xc006)
+    Init 1 syndrome: 00000000000001100000000000110 (0xc006)
+  Subcase 21: A > V,  < 0; 0R0   /   1   /   0 >
+    Init 0 syndrome: 00000000000000000110001100000 (0xc60)
+    Init 1 syndrome: 00000000000000000110001100000 (0xc60)
+  Subcase 22: A > V,  < 0; 1R1   /   0   /   1 >
+    Init 0 syndrome: 00000000000001100000000000110 (0xc006)
+    Init 1 syndrome: 00000000000001100000000000110 (0xc006)
+  Subcase 23: A > V,  < 1; 0R0   /   1   /   0 >
+    Init 0 syndrome: 00000000000000000110001100000 (0xc60)
+    Init 1 syndrome: 00000000000000000110001100000 (0xc60)
+  Subcase 24: A > V,  < 1; 1R1   /   0   /   1 >
+    Init 0 syndrome: 00000000000001100000000000110 (0xc006)
+    Init 1 syndrome: 00000000000001100000000000110 (0xc006)
+
+Fault: dynamic Incorrect Read Coupling Fault (dCFir)
+  Subcase 1: A < V,  < 0; 0W0   /   0   /   1 >
+    Init 0 syndrome: undetected
+    Init 1 syndrome: undetected
+  Subcase 2: A < V,  < 0; 1W0   /   0   /   1 >
+    Init 0 syndrome: undetected
+    Init 1 syndrome: undetected
+  Subcase 3: A < V,  < 1; 0W0   /   0   /   1 >
+    Init 0 syndrome: undetected
+    Init 1 syndrome: undetected
+  Subcase 4: A < V,  < 1; 1W0   /   0   /   1 >
+    Init 0 syndrome: undetected
+    Init 1 syndrome: undetected
+  Subcase 5: A > V,  < 0; 0W0   /   0   /   1 >
+    Init 0 syndrome: undetected
+    Init 1 syndrome: undetected
+  Subcase 6: A > V,  < 0; 1W0   /   0   /   1 >
+    Init 0 syndrome: undetected
+    Init 1 syndrome: undetected
+  Subcase 7: A > V,  < 1; 0W0   /   0   /   1 >
+    Init 0 syndrome: undetected
+    Init 1 syndrome: undetected
+  Subcase 8: A > V,  < 1; 1W0   /   0   /   1 >
+    Init 0 syndrome: undetected
+    Init 1 syndrome: undetected
+  Subcase 9: A < V,  < 0; 0W1   /   1   /   0 >
+    Init 0 syndrome: undetected
+    Init 1 syndrome: undetected
+  Subcase 10: A < V,  < 0; 1W1   /   1   /   0 >
+    Init 0 syndrome: undetected
+    Init 1 syndrome: undetected
+  Subcase 11: A < V,  < 1; 0W1   /   1   /   0 >
+    Init 0 syndrome: undetected
+    Init 1 syndrome: undetected
+  Subcase 12: A < V,  < 1; 1W1   /   1   /   0 >
+    Init 0 syndrome: undetected
+    Init 1 syndrome: undetected
+  Subcase 13: A > V,  < 0; 0W1   /   1   /   0 >
+    Init 0 syndrome: undetected
+    Init 1 syndrome: undetected
+  Subcase 14: A > V,  < 0; 1W1   /   1   /   0 >
+    Init 0 syndrome: undetected
+    Init 1 syndrome: undetected
+  Subcase 15: A > V,  < 1; 0W1   /   1   /   0 >
+    Init 0 syndrome: undetected
+    Init 1 syndrome: undetected
+  Subcase 16: A > V,  < 1; 1W1   /   1   /   0 >
+    Init 0 syndrome: undetected
+    Init 1 syndrome: undetected
+  Subcase 17: A < V,  < 0; 0R0   /   0   /   1 >
+    Init 0 syndrome: 10011011001000011110111100001 (0x13643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 18: A < V,  < 0; 1R1   /   1   /   0 >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 19: A < V,  < 1; 0R0   /   0   /   1 >
+    Init 0 syndrome: 10011011001000011110111100001 (0x13643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 20: A < V,  < 1; 1R1   /   1   /   0 >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 21: A > V,  < 0; 0R0   /   0   /   1 >
+    Init 0 syndrome: 10011011001000011110111100001 (0x13643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 22: A > V,  < 0; 1R1   /   1   /   0 >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 23: A > V,  < 1; 0R0   /   0   /   1 >
+    Init 0 syndrome: 10011011001000011110111100001 (0x13643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 24: A > V,  < 1; 1R1   /   1   /   0 >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+
+Fault: dynamic Transition Coupling Fault (dCFtr)
+  Subcase 1: A < V,  < 0; 0W0   /   0   /   - >
+    Init 0 syndrome: undetected
+    Init 1 syndrome: undetected
+  Subcase 2: A < V,  < 0; 1W0   /   0   /   - >
+    Init 0 syndrome: undetected
+    Init 1 syndrome: undetected
+  Subcase 3: A < V,  < 1; 0W0   /   0   /   - >
+    Init 0 syndrome: undetected
+    Init 1 syndrome: undetected
+  Subcase 4: A < V,  < 1; 1W0   /   0   /   - >
+    Init 0 syndrome: undetected
+    Init 1 syndrome: undetected
+  Subcase 5: A > V,  < 0; 0W0   /   0   /   - >
+    Init 0 syndrome: undetected
+    Init 1 syndrome: undetected
+  Subcase 6: A > V,  < 0; 1W0   /   0   /   - >
+    Init 0 syndrome: undetected
+    Init 1 syndrome: undetected
+  Subcase 7: A > V,  < 1; 0W0   /   0   /   - >
+    Init 0 syndrome: undetected
+    Init 1 syndrome: undetected
+  Subcase 8: A > V,  < 1; 1W0   /   0   /   - >
+    Init 0 syndrome: undetected
+    Init 1 syndrome: undetected
+  Subcase 9: A < V,  < 0; 0W1   /   1   /   - >
+    Init 0 syndrome: undetected
+    Init 1 syndrome: undetected
+  Subcase 10: A < V,  < 0; 1W1   /   1   /   - >
+    Init 0 syndrome: undetected
+    Init 1 syndrome: undetected
+  Subcase 11: A < V,  < 1; 0W1   /   1   /   - >
+    Init 0 syndrome: undetected
+    Init 1 syndrome: undetected
+  Subcase 12: A < V,  < 1; 1W1   /   1   /   - >
+    Init 0 syndrome: undetected
+    Init 1 syndrome: undetected
+  Subcase 13: A > V,  < 0; 0W1   /   1   /   - >
+    Init 0 syndrome: undetected
+    Init 1 syndrome: undetected
+  Subcase 14: A > V,  < 0; 1W1   /   1   /   - >
+    Init 0 syndrome: undetected
+    Init 1 syndrome: undetected
+  Subcase 15: A > V,  < 1; 0W1   /   1   /   - >
+    Init 0 syndrome: undetected
+    Init 1 syndrome: undetected
+  Subcase 16: A > V,  < 1; 1W1   /   1   /   - >
+    Init 0 syndrome: undetected
+    Init 1 syndrome: undetected
+  Subcase 17: A < V,  < 0; 0R0   /   0   /   - >
+    Init 0 syndrome: undetected
+    Init 1 syndrome: undetected
+  Subcase 18: A < V,  < 0; 1R1   /   1   /   - >
+    Init 0 syndrome: undetected
+    Init 1 syndrome: undetected
+  Subcase 19: A < V,  < 1; 0R0   /   0   /   - >
+    Init 0 syndrome: undetected
+    Init 1 syndrome: undetected
+  Subcase 20: A < V,  < 1; 1R1   /   1   /   - >
+    Init 0 syndrome: undetected
+    Init 1 syndrome: undetected
+  Subcase 21: A > V,  < 0; 0R0   /   0   /   - >
+    Init 0 syndrome: undetected
+    Init 1 syndrome: undetected
+  Subcase 22: A > V,  < 0; 1R1   /   1   /   - >
+    Init 0 syndrome: undetected
+    Init 1 syndrome: undetected
+  Subcase 23: A > V,  < 1; 0R0   /   0   /   - >
+    Init 0 syndrome: undetected
+    Init 1 syndrome: undetected
+  Subcase 24: A > V,  < 1; 1R1   /   1   /   - >
+    Init 0 syndrome: undetected
+    Init 1 syndrome: undetected
+
+Fault: dynamic Write Destructive Coupling Fault (dCFwd)
+  Subcase 1: A < V,  < 0; 0W0   /   1   /   - >
+    Init 0 syndrome: 10011011000000001110011100000 (0x13601ce0)
+    Init 1 syndrome: 00011011000000001110011100000 (0x3601ce0)
+  Subcase 2: A < V,  < 0; 1W0   /   1   /   - >
+    Init 0 syndrome: 00011011001000011110111100001 (0x3643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 3: A < V,  < 1; 0W0   /   1   /   - >
+    Init 0 syndrome: 10011011000000001110011100000 (0x13601ce0)
+    Init 1 syndrome: 00011011000000001110011100000 (0x3601ce0)
+  Subcase 4: A < V,  < 1; 1W0   /   1   /   - >
+    Init 0 syndrome: 00011011001000011110111100001 (0x3643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 5: A > V,  < 0; 0W0   /   1   /   - >
+    Init 0 syndrome: 10011011000000001110011100000 (0x13601ce0)
+    Init 1 syndrome: 00011011000000001110011100000 (0x3601ce0)
+  Subcase 6: A > V,  < 0; 1W0   /   1   /   - >
+    Init 0 syndrome: 00011011001000011110111100001 (0x3643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 7: A > V,  < 1; 0W0   /   1   /   - >
+    Init 0 syndrome: 10011011000000001110011100000 (0x13601ce0)
+    Init 1 syndrome: 00011011000000001110011100000 (0x3601ce0)
+  Subcase 8: A > V,  < 1; 1W0   /   1   /   - >
+    Init 0 syndrome: 00011011001000011110111100001 (0x3643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 9: A < V,  < 0; 0W1   /   0   /   - >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 10: A < V,  < 0; 1W1   /   0   /   - >
+    Init 0 syndrome: 01100000110011100000000001110 (0xc19c00e)
+    Init 1 syndrome: 01100000110011100000000001110 (0xc19c00e)
+  Subcase 11: A < V,  < 1; 0W1   /   0   /   - >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 12: A < V,  < 1; 1W1   /   0   /   - >
+    Init 0 syndrome: 01100000110011100000000001110 (0xc19c00e)
+    Init 1 syndrome: 01100000110011100000000001110 (0xc19c00e)
+  Subcase 13: A > V,  < 0; 0W1   /   0   /   - >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 14: A > V,  < 0; 1W1   /   0   /   - >
+    Init 0 syndrome: 01100000110011100000000001110 (0xc19c00e)
+    Init 1 syndrome: 01100000110011100000000001110 (0xc19c00e)
+  Subcase 15: A > V,  < 1; 0W1   /   0   /   - >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 16: A > V,  < 1; 1W1   /   0   /   - >
+    Init 0 syndrome: 01100000110011100000000001110 (0xc19c00e)
+    Init 1 syndrome: 01100000110011100000000001110 (0xc19c00e)
+  Subcase 17: A < V,  < 0; 0R0   /   1   /   - >
+    Init 0 syndrome: 10011011001000011110111100001 (0x13643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 18: A < V,  < 0; 1R1   /   0   /   - >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 19: A < V,  < 1; 0R0   /   1   /   - >
+    Init 0 syndrome: 10011011001000011110111100001 (0x13643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 20: A < V,  < 1; 1R1   /   0   /   - >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 21: A > V,  < 0; 0R0   /   1   /   - >
+    Init 0 syndrome: 10011011001000011110111100001 (0x13643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 22: A > V,  < 0; 1R1   /   0   /   - >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 23: A > V,  < 1; 0R0   /   1   /   - >
+    Init 0 syndrome: 10011011001000011110111100001 (0x13643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 24: A > V,  < 1; 1R1   /   0   /   - >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+
+Fault: dynamic Disturb Coupling Fault (dCFds)
+  Subcase 1: A < V,  < 0W0; 0   /   1   /   - >
+    Init 0 syndrome: 10011011001000011110111100001 (0x13643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 2: A < V,  < 0W0; 1   /   0   /   - >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 3: A < V,  < 1W0; 0   /   1   /   - >
+    Init 0 syndrome: 10011011001000011110111100001 (0x13643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 4: A < V,  < 1W0; 1   /   0   /   - >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 5: A > V,  < 0W0; 0   /   1   /   - >
+    Init 0 syndrome: 10011011001000011110111100001 (0x13643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 6: A > V,  < 0W0; 1   /   0   /   - >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 7: A > V,  < 1W0; 0   /   1   /   - >
+    Init 0 syndrome: 10011011001000011110111100001 (0x13643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 8: A > V,  < 1W0; 1   /   0   /   - >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 9: A < V,  < 0W0; 0   /   0   /   - >
+    Init 0 syndrome: undetected
+    Init 1 syndrome: undetected
+  Subcase 10: A < V,  < 0W0; 1   /   1   /   - >
+    Init 0 syndrome: undetected
+    Init 1 syndrome: undetected
+  Subcase 11: A < V,  < 1W0; 0   /   0   /   - >
+    Init 0 syndrome: undetected
+    Init 1 syndrome: undetected
+  Subcase 12: A < V,  < 1W0; 1   /   1   /   - >
+    Init 0 syndrome: undetected
+    Init 1 syndrome: undetected
+  Subcase 13: A > V,  < 0W0; 0   /   0   /   - >
+    Init 0 syndrome: undetected
+    Init 1 syndrome: undetected
+  Subcase 14: A > V,  < 0W0; 1   /   1   /   - >
+    Init 0 syndrome: undetected
+    Init 1 syndrome: undetected
+  Subcase 15: A > V,  < 1W0; 0   /   0   /   - >
+    Init 0 syndrome: undetected
+    Init 1 syndrome: undetected
+  Subcase 16: A > V,  < 1W0; 1   /   1   /   - >
+    Init 0 syndrome: undetected
+    Init 1 syndrome: undetected
+  Subcase 17: A < V,  < 0W1; 0   /   1   /   - >
+    Init 0 syndrome: 10011011001000011110111100001 (0x13643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 18: A < V,  < 0W1; 1   /   0   /   - >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 19: A < V,  < 1W1; 0   /   1   /   - >
+    Init 0 syndrome: 10011011001000011110111100001 (0x13643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 20: A < V,  < 1W1; 1   /   0   /   - >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 21: A > V,  < 0W1; 0   /   1   /   - >
+    Init 0 syndrome: 10011011001000011110111100001 (0x13643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 22: A > V,  < 0W1; 1   /   0   /   - >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 23: A > V,  < 1W1; 0   /   1   /   - >
+    Init 0 syndrome: 10011011001000011110111100001 (0x13643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 24: A > V,  < 1W1; 1   /   0   /   - >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 25: A < V,  < 0W1; 0   /   1   /   - >
+    Init 0 syndrome: 10011011001000011110111100001 (0x13643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 26: A < V,  < 0W1; 1   /   0   /   - >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 27: A < V,  < 1W1; 0   /   1   /   - >
+    Init 0 syndrome: 10011011001000011110111100001 (0x13643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 28: A < V,  < 1W1; 1   /   0   /   - >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 29: A > V,  < 0W1; 0   /   1   /   - >
+    Init 0 syndrome: 10011011001000011110111100001 (0x13643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 30: A > V,  < 0W1; 1   /   0   /   - >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 31: A > V,  < 1W1; 0   /   1   /   - >
+    Init 0 syndrome: 10011011001000011110111100001 (0x13643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 32: A > V,  < 1W1; 1   /   0   /   - >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 33: A < V,  < 0W0; 0   /   1   /   - >
+    Init 0 syndrome: 10011011001000011110111100001 (0x13643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 34: A < V,  < 0W0; 1   /   0   /   - >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 35: A < V,  < 1W0; 0   /   1   /   - >
+    Init 0 syndrome: 10011011001000011110111100001 (0x13643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 36: A < V,  < 1W0; 1   /   0   /   - >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 37: A > V,  < 0W0; 0   /   1   /   - >
+    Init 0 syndrome: 10011011001000011110111100001 (0x13643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 38: A > V,  < 0W0; 1   /   0   /   - >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 39: A > V,  < 1W0; 0   /   1   /   - >
+    Init 0 syndrome: 10011011001000011110111100001 (0x13643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 40: A > V,  < 1W0; 1   /   0   /   - >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 41: A < V,  < 0W1; 0   /   0   /   - >
+    Init 0 syndrome: undetected
+    Init 1 syndrome: undetected
+  Subcase 42: A < V,  < 0W1; 1   /   1   /   - >
+    Init 0 syndrome: undetected
+    Init 1 syndrome: undetected
+  Subcase 43: A < V,  < 1W1; 0   /   0   /   - >
+    Init 0 syndrome: undetected
+    Init 1 syndrome: undetected
+  Subcase 44: A < V,  < 1W1; 1   /   1   /   - >
+    Init 0 syndrome: undetected
+    Init 1 syndrome: undetected
+  Subcase 45: A > V,  < 0W1; 0   /   0   /   - >
+    Init 0 syndrome: undetected
+    Init 1 syndrome: undetected
+  Subcase 46: A > V,  < 0W1; 1   /   1   /   - >
+    Init 0 syndrome: undetected
+    Init 1 syndrome: undetected
+  Subcase 47: A > V,  < 1W1; 0   /   0   /   - >
+    Init 0 syndrome: undetected
+    Init 1 syndrome: undetected
+  Subcase 48: A > V,  < 1W1; 1   /   1   /   - >
+    Init 0 syndrome: undetected
+    Init 1 syndrome: undetected
+  Subcase 49: A < V,  < 0R0; 0   /   1   /   - >
+    Init 0 syndrome: 10011011001000011110111100001 (0x13643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 50: A < V,  < 0R1; 1   /   0   /   - >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 51: A < V,  < 1R0; 0   /   1   /   - >
+    Init 0 syndrome: 10011011001000011110111100001 (0x13643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 52: A < V,  < 1R1; 1   /   0   /   - >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 53: A > V,  < 0R0; 0   /   1   /   - >
+    Init 0 syndrome: 10011011001000011110111100001 (0x13643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 54: A > V,  < 0R1; 1   /   0   /   - >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 55: A > V,  < 1R0; 0   /   1   /   - >
+    Init 0 syndrome: 10011011001000011110111100001 (0x13643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 56: A > V,  < 1R1; 1   /   0   /   - >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 57: A < V,  < 0R0; 0   /   0   /   - >
+    Init 0 syndrome: undetected
+    Init 1 syndrome: undetected
+  Subcase 58: A < V,  < 0R1; 1   /   1   /   - >
+    Init 0 syndrome: undetected
+    Init 1 syndrome: undetected
+  Subcase 59: A < V,  < 1R0; 0   /   0   /   - >
+    Init 0 syndrome: undetected
+    Init 1 syndrome: undetected
+  Subcase 60: A < V,  < 1R1; 1   /   1   /   - >
+    Init 0 syndrome: undetected
+    Init 1 syndrome: undetected
+  Subcase 61: A > V,  < 0R0; 0   /   0   /   - >
+    Init 0 syndrome: undetected
+    Init 1 syndrome: undetected
+  Subcase 62: A > V,  < 0R1; 1   /   1   /   - >
+    Init 0 syndrome: undetected
+    Init 1 syndrome: undetected
+  Subcase 63: A > V,  < 1R0; 0   /   0   /   - >
+    Init 0 syndrome: undetected
+    Init 1 syndrome: undetected
+  Subcase 64: A > V,  < 1R1; 1   /   1   /   - >
+    Init 0 syndrome: undetected
+    Init 1 syndrome: undetected
+  Subcase 65: A < V,  < 0R0; 0   /   1   /   - >
+    Init 0 syndrome: 10011011001000011110111100001 (0x13643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 66: A < V,  < 0R0; 1   /   0   /   - >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 67: A < V,  < 1R1; 0   /   1   /   - >
+    Init 0 syndrome: 10011011001000011110111100001 (0x13643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 68: A < V,  < 1R1; 1   /   0   /   - >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 69: A > V,  < 0R0; 0   /   1   /   - >
+    Init 0 syndrome: 10011011001000011110111100001 (0x13643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 70: A > V,  < 0R1; 1   /   0   /   - >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+  Subcase 71: A > V,  < 1R0; 0   /   1   /   - >
+    Init 0 syndrome: 10011011001000011110111100001 (0x13643de1)
+    Init 1 syndrome: 10011011001000011110111100001 (0x13643de1)
+  Subcase 72: A > V,  < 1R1; 1   /   0   /   - >
+    Init 0 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+    Init 1 syndrome: 01100100110111100001000011110 (0xc9bc21e)
+

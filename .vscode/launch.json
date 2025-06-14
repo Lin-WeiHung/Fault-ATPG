@@ -6,7 +6,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "/home/bb232399/CIM/Simulator/main",
-            "args": ["fault.json"],
+            "args": ["fault.json", "marchTest.json"],
             "stopAtEntry": false,
             "cwd": "/home/bb232399/CIM/Simulator",
             "environment": [],
