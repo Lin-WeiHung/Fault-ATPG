@@ -1,10 +1,10 @@
 CXX = g++
 CXXFLAGS = -g -std=c++17
 
-OURPUT_LIST = main
+OUTPUT_LIST = main
 
-com: faultSimulator.cpp parser.cpp main.cpp
-	$(CXX) $(CXXFLAGS) -o main faultSimulator.cpp parser.cpp main.cpp
+com: faultSimulator.cpp parser.cpp MarchGenerator.cpp main.cpp
+	$(CXX) $(CXXFLAGS) -o main faultSimulator.cpp parser.cpp MarchGenerator.cpp main.cpp
 
 clean:
-	rm -f $(OURPUT_LIST)
+	rm -f $(OUTPUT_LIST)

@@ -8,15 +8,17 @@
 class MarchGenerator {
 public:
     // Constructor takes all fault primitives to test against
-    explicit MarchGenerator(const std::vector<FaultPrimitive>& faultPrims);
+    MarchGenerator(FaultSimulator& sim) : simulator(sim) {};
 
     // Generate a sequence of given length that yields 100% detection
     // Returns empty vector if none found
     std::vector<MarchElement> generate(int length);
 
+    void printMarchTest() const;
 private:
-    const std::vector<FaultPrimitive>& faults;
     std::vector<SingleOp> current;
+    std::vector<MarchElement> marchTest;
+    FaultSimulator& simulator; // Reference to the fault simulator
 
     // Depth-first search to build candidates
     bool dfs(int pos, int length);
@@ -24,8 +26,10 @@ private:
     // Check transition constraint between prev and next ops
     bool isValidTransition(const SingleOp& prev, const SingleOp& next);
 
+    void combineMarchElements();
+
     // Wrap SingleOp vector into MarchElement sequence and test detection
-    bool testSequence(const std::vector<SingleOp>& seq);
+    bool testSequence();
 };
 
 #endif // MARCH_GENERATOR_HPP

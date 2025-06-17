@@ -98,9 +98,11 @@ typedef std::map<std::string, std::vector<SubcaseSynd>> Syndromes;
 
 class FaultSimulator {
 public:
-    FaultSimulator(const std::vector<MarchElement>& m,
-                   const std::vector<FaultPrimitive>& f);
-    Syndromes& runAll();
+    FaultSimulator(const std::vector<FaultPrimitive>& f);
+    void setFaults(const std::vector<FaultPrimitive>& f) { faults = f; }
+    void setMarchSequence(const std::vector<MarchElement>& m) { marchSeq = m; }
+    void runAll();
+    const Syndromes& getAllSyndromes() const { return All_syndromes; }
 private:
     std::vector<MarchElement> marchSeq;
     std::vector<FaultPrimitive> faults;

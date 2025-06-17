@@ -172,11 +172,13 @@ int Memory::readCell(int addr, int v) {
 // FaultSimulator implementation
 // -------------------------------
 
-FaultSimulator::FaultSimulator(const std::vector<MarchElement>& m,
-                               const std::vector<FaultPrimitive>& f)
-    : marchSeq(m), faults(f), rng(std::random_device{}()) {}
+FaultSimulator::FaultSimulator(const std::vector<FaultPrimitive>& f)
+    : faults(f), rng(std::random_device{}()) {
+}
 
-Syndromes& FaultSimulator::runAll() {
+void FaultSimulator::runAll() {
+    // 初始化所有 fault 的 syndromes
+    All_syndromes.clear();
     for(const auto& fp : faults) {
         std::vector<SubcaseSynd> subcaseSynd_vec;
         for(const auto& sc : fp.subs) {
@@ -187,8 +189,6 @@ Syndromes& FaultSimulator::runAll() {
         // 將每個 fault primitive 的 syndromes 存入 All_syndromes
         All_syndromes[fp.name] = subcaseSynd_vec;
     }
-    // 返回所有 fault 的 syndromes
-    return All_syndromes;
 }
 
 std::pair<int,int> FaultSimulator::chooseAggVictim(const FaultSubcase& sc) {
