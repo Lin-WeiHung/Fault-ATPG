@@ -1,294 +1,351 @@
 #include "faultSimulator.hpp"
 
 // -------------------------------
-// Cell class implementation
+// OneCellFault class implementation
 // -------------------------------
-
-Cell::Cell()
-    : cell_value(0), TriggerValue(-1), maxQueue(0), faultValue(-1), finalReadValue(-1) {
+void OneCellFault::reset() {
+    vic_ = UNPROCESS; // 默認為未設定
+    trigger_ = {};
+    history_ = {};
+    isTriggered_ = false;
 }
 
-void Cell::init(int init) {
-    // 初始化 cell value
-    cell_value = init;
-    TriggerValue = -1; // 初始無觸發值
-    faultValue = -1; // 初始無 fault 觸發值
-    finalReadValue = -1; // 初始無讀取最終值
-    maxQueue = 0; // 初始 queue 大小為 0
-    clearQueue(); // 清空歷史記錄
-}
-
-void Cell::installFault(const std::vector<SingleOp>& seq, int TriggerI, int finalF, int finalR) {
-    // 安裝 fault sequence to this cell
-    // seq 非空時，代表需依序匹配 seq 才觸發 Fault
-    // faultValue 保持 -1
-    faultSeq = seq;               
-    TriggerValue = TriggerI;
-    maxQueue = seq.size(); // 設定 queue 大小            
-    clearQueue();
-    // 設定fault觸發值
-    faultValue = finalF; // 觸發 Fault 時的最終值
-    finalReadValue = finalR; // 讀取時的最終值                 
-}
-
-void Cell::installFault(int TriggerI, int finalF, int finalR) {
-    // 安裝單一值觸發 (no sequence)
-    // seq 為空，僅比對 cell.value == faultValue
-    faultSeq.clear();             
-    TriggerValue = TriggerI;
-    maxQueue = 0; // 不需要 queue 比對          
-    clearQueue();     
-    // 設定fault觸發值
-    faultValue = finalF; // 觸發 Fault 時的最終值
-    finalReadValue = finalR; // 讀取時的最終值               
-}
-
-void Cell::clearQueue() {
-    // 清空 OperationRecord queue
-    // 每個 element 結束後呼叫，防止跨 element
-    history.clear();
-}
-
-void Cell::recordOperation(const SingleOp& op, int before) {
-    // Push new OperationRecord to history
-    OperationRecord rec;
-    rec.beforeValue = before;
-    rec.op = op;
-    rec.afterValue = cell_value; // current value after op
-    history.push_back(rec);
-    if(history.size() > maxQueue) history.pop_front();
-}
-
-bool Cell::historyMatches() const {
-    if(history.size() < faultSeq.size()) return false;
-    // 從 queue.front() 到 back()
-    auto it = history.begin();
-    if (it->beforeValue != TriggerValue) {
-        return false; // 初始值不匹配
+int OneCellFault::onRead(int addr, const MarchOpIdx& opIdx, const SingleOp& op) {
+    if (addr != vic_) {
+        std::__throw_invalid_argument("Address does not match victim cell address.");
     }
-    // 檢查歷史是否與 faultSeq 完全匹配
-    for(size_t i=0; i<faultSeq.size(); ++i, ++it) {
-        if(it->op.type != faultSeq[i].type || it->op.value != faultSeq[i].value)
-            return false;
+    // 記錄操作前的值
+    if (history_.size() >= trigger_.size()) {
+        history_.pop_front(); // 保持歷史記錄長度
     }
-    return true;
-}
+    history_.push_back({mem_[addr], op});
 
-bool Cell::checkTrigger() {
-    if(!faultSeq.empty() && TriggerValue == -1) {
-        std::cout << "Error: It is an illegal set." << std::endl;
-        return false;
-    }
-    if(faultSeq.empty() && TriggerValue == -1) {
-        return false;
-    }
-    // 空 seq 但 faultValue != -1 時，直接比對 current value
-    if(faultSeq.empty() && TriggerValue != -1) {
-        if(cell_value == TriggerValue) {
-            return true;
+    // 檢查是否觸發 fault
+    if (addr == vic_ && triggerMatcher()) {
+        isTriggered_ = true;
+        mem_[addr] = faultValue_; // 注入 fault 值
+        if (finalReadValue_ == UNPROCESS) {
+            // 如果未設定 finalReadValue，則錯誤
+            std::__throw_invalid_argument("Final read value is not set.");
         }
-        return false;
-    }
-    // 否則檢查 history 是否與 faultSeq 完全匹配
-    if(historyMatches()) {
-        return true;
-    }
-    return false;
-}
-
-void Cell::triggerFault() {
-    if (faultValue == -1) {
-        return; // 非victim cell 或未設定 faultValue
-    }
-    // 觸發 Fault: 強制將 cell.value 改為 finalF
-    cell_value = faultValue; // faultFinalValue 需另行存入
-}
-
-int Cell::applyOp(const SingleOp& op) {
-    int before = cell_value;
-    if(op.type == OpType::WRITE) {
-        cell_value = op.value; // 寫入操作直接更新 value
-    }
-    // 記錄並嘗試觸發
-    recordOperation(op, before);
-    if(checkTrigger()) {
-        triggerFault();
-        if(op.type == OpType::READ) {
-            // 如果是讀取操作，則返回觸發後的值
-            return finalReadValue != -1 ? finalReadValue : cell_value;
-        }
-    }
-    if (op.type == OpType::READ) {
-        // 如果是讀取操作，則返回當前值
-        return cell_value;
-    }
-    // 如果是寫入操作，則不返回值
-    return -1; // 寫入操作不返回值
-}
-
-
-// -------------------------------
-// Memory class implementation
-// -------------------------------
-
-Memory::Memory(int init) {
-    // 初始化所有 cell
-    for(int i = 0; i < MAX_ADDR; ++i) {
-        cells[i].init(init);
-    }
-}
-
-void Memory::installFault(const FaultSubcase* f, int vicAddr, int aggrAddr) {
-    // 對 victim 安裝 seqV 或 value
-    if(!f->seqV.empty()) {
-        cells[vicAddr].installFault(f->seqV, f->VI, f->finalF, f->finalR);
-    } else {
-        cells[vicAddr].installFault(f->VI, f->finalF, f->finalR);
-    }
-    // coupling: 同理對 aggressor
-    if(f->type == FaultType::COUPLING) {
-        if(!f->seqA.empty()) {
-            cells[aggrAddr].installFault(f->seqA, f->VI, -1, -1);
+        if (op.value != finalReadValue_) {
+            // 如果 READ 的值不等於預期的 finalReadValue，則記錄偵測結果
+            isDetected_ = true;
+            detectionRecord_.syndrome[opIdx] = true; // 偵測到 fault
+            detectionRecord_.vicAddrs.insert(addr); // 記錄 victim 地址
+            return faultValue_; // 回傳 fault 值
         } else {
-            cells[aggrAddr].installFault(f->AI, -1, -1);
+            // 如果 detectionRecord_.syndrome 沒有 opIdx 這個 key，則新增
+            if (detectionRecord_.syndrome.find(opIdx) == detectionRecord_.syndrome.end()) {
+                detectionRecord_.syndrome[opIdx] = false; // 未偵測到
+            }
+            return mem_[addr]; // 回傳預期值
         }
+    }
+
+    if (mem_[addr] != op.value) {
+        // 如果讀取的值與預期不符，則記錄偵測結果
+        isDetected_ = true;
+        detectionRecord_.syndrome[opIdx] = true; // 偵測到 fault
+        detectionRecord_.vicAddrs.insert(addr); // 記錄 victim 地址
+    } else {
+        // 如果 detectionRecord_.syndrome 沒有 opIdx 這個 key，則新增
+        if (detectionRecord_.syndrome.find(opIdx) == detectionRecord_.syndrome.end()) {
+            detectionRecord_.syndrome[opIdx] = false; // 未偵測到
+        }
+    }
+
+    return mem_[addr]; // 回傳預期值
+}
+
+void OneCellFault::onWrite(int addr, const SingleOp& op) {
+    if (addr != vic_) {
+        std::__throw_invalid_argument("Address does not match victim cell address.");
+    }
+    if (history_.size() >= trigger_.size()) {
+        history_.pop_front(); // 保持歷史記錄長度
+    }
+    history_.push_back({mem_[addr], op});
+    // 記錄寫入操作
+    mem_[addr] = op.value;
+    if (addr == vic_ && triggerMatcher()) {
+        mem_[addr] = faultValue_; // 注入 fault 值
     }
 }
 
-void Memory::clearElementQueues() {
-    // 每個 element 執行完後清除歷史
-    for(auto& c : cells) c.clearQueue();
+bool OneCellFault::triggerMatcher() {
+    if (trigger_.size() != history_.size()) {
+        return false; // 如果歷史記錄長度不等於觸發條件序列長度，則不匹配
+    }
+    return std::equal(trigger_.begin(), trigger_.end(), history_.begin(),
+        [](const OperationRecord& a, const OperationRecord& b) {
+            return a == b; // 比較操作前的值和操作類型
+        });
 }
 
-void Memory::writeCell(int addr, int v) {
-    cells[addr].applyOp({OpType::WRITE, v});
+void OneCellFault::setTrigger(const int VI, const std::vector<SingleOp>& seq) {
+    trigger_.clear();
+    for (int i = 0; i < seq.size(); ++i) {
+        if (i == 0) {
+            trigger_.push_back({VI, seq[i]});
+            continue;
+        }
+        trigger_.push_back({seq[i - 1].value, seq[i]});
+    }
 }
 
-int Memory::readCell(int addr, int v) {
-    return cells[addr].applyOp({OpType::READ, v});
+std::string OneCellFault::getTriggerInfo() const {
+    std::string seq = std::to_string(trigger_.front().beforeValue);
+    for (const auto& rec : trigger_) {
+        seq += rec.op.type == OperationType::READ ? "R" : "W";
+        seq += std::to_string(rec.op.value);
+    }
+    std::string finalF = std::to_string(faultValue_);
+    std::string finalR = (finalReadValue_ == UNPROCESS ? "-" : std::to_string(finalReadValue_));
+    return "< " + seq + " / " + finalF + " / " + finalR + " >";
+}
+
+// -------------------------------
+// TwoCellFault class implementation
+// -------------------------------
+
+void TwoCellFault::reset() {
+    aggr_ = UNPROCESS;
+    vic_ = UNPROCESS;
+    type_ = TwoCellFaultType::Saa; // 默認為 Saa
+    coupleTriggerValue_ = UNPROCESS; // 未設定
+    trigger_ = {};
+    history_ = {};
+    isTriggered_ = false;
+}
+
+int TwoCellFault::onRead(int addr, const MarchOpIdx& opIdx, const SingleOp& op) {
+    if (addr != vic_ && addr != aggr_) {
+        std::__throw_invalid_argument("Address does not match victim or aggressor cell address.");
+    }
+
+    if (type_ == TwoCellFaultType::Saa && addr == aggr_) {
+        // 如果是 Saa 類型，則只記錄 aggressor 的操作
+        if (history_.size() >= trigger_.size()) {
+            history_.pop_front(); // 保持歷史記錄長度
+        }
+        history_.push_back({mem_[addr], op});
+    } else if (type_ == TwoCellFaultType::Svv && addr == vic_) {
+        // 如果是 Svv 類型，則只記錄 victim 的操作
+        if (history_.size() >= trigger_.size()) {
+            history_.pop_front(); // 保持歷史記錄長度
+        }
+        history_.push_back({mem_[addr], op});
+    }
+
+    // 檢查是否觸發 fault
+    if (((type_ == TwoCellFaultType::Saa && addr == aggr_) || (type_ == TwoCellFaultType::Svv && addr == vic_))
+        && triggerMatcher()) {
+        isTriggered_ = true;
+        mem_[addr] = faultValue_; // 注入 fault 值
+        if (type_ == TwoCellFaultType::Svv && finalReadValue_ == UNPROCESS) {
+            // 如果未設定 finalReadValue，則錯誤
+            std::__throw_invalid_argument("Final read value is not set.");
+        }
+        if (op.value != finalReadValue_) {
+            // 如果 READ 的值不等於預期的 finalReadValue，則記錄偵測結果
+            isDetected_ = true;
+            detectionRecord_.syndrome[opIdx] = true; // 偵測到 fault
+            detectionRecord_.vicAddrs.insert(addr); // 記錄 victim 地址
+            return faultValue_; // 回傳 fault 值
+        } else {
+            // 如果 detectionRecord_.syndrome 沒有 opIdx 這個 key，則新增
+            if (detectionRecord_.syndrome.find(opIdx) == detectionRecord_.syndrome.end()) {
+                detectionRecord_.syndrome[opIdx] = false; // 未偵測到
+            }
+            return mem_[addr]; // 回傳預期值
+        }
+    }
+
+    if (mem_[addr] != op.value) {
+        // 如果讀取的值與預期不符，則記錄偵測結果
+        isDetected_ = true;
+        detectionRecord_.syndrome[opIdx] = true; // 偵測到 fault
+        detectionRecord_.vicAddrs.insert(addr); // 記錄 victim 地址
+    } else {
+        // 如果 detectionRecord_.syndrome 沒有 opIdx 這個 key，則新增
+        if (detectionRecord_.syndrome.find(opIdx) == detectionRecord_.syndrome.end()) {
+            detectionRecord_.syndrome[opIdx] = false; // 未偵測到
+        }
+    }
+
+    return mem_[addr]; // 回傳預期值
+}
+
+void TwoCellFault::onWrite(int addr, const SingleOp& op) {
+    if (addr != vic_ && addr != aggr_) {
+        std::__throw_invalid_argument("Address does not match victim or aggressor cell address.");
+    }
+    if (type_ == TwoCellFaultType::Saa && addr == aggr_) { 
+        if (history_.size() >= trigger_.size()) {
+            history_.pop_front(); // 保持歷史記錄長度
+        }
+        history_.push_back({mem_[addr], op});
+    } else if (type_ == TwoCellFaultType::Svv && addr == vic_) {
+        if (history_.size() >= trigger_.size()) {
+            history_.pop_front(); // 保持歷史記錄長度
+        }
+        history_.push_back({mem_[addr], op});
+    }
+    // 記錄寫入操作
+    mem_[addr] = op.value;
+    if (((type_ == TwoCellFaultType::Saa && addr == aggr_) || (type_ == TwoCellFaultType::Svv && addr == vic_))
+        && triggerMatcher()) {
+        mem_[addr] = faultValue_; // 注入 fault 值
+    }
+}
+
+bool TwoCellFault::triggerMatcher() {
+    if (trigger_.size() != history_.size()) {
+        return false; // 如果歷史記錄長度不等於觸發條件序列長度，則不匹配
+    }
+    if (type_ == TwoCellFaultType::Saa && mem_[vic_] != coupleTriggerValue_) {
+        return false; // Saa 類型需要 coupleTriggerValue 匹配
+    }
+    if (type_ == TwoCellFaultType::Svv && mem_[aggr_] != coupleTriggerValue_) {
+        return false; // Svv 類型需要 coupleTriggerValue 匹配
+    }
+    return std::equal(trigger_.begin(), trigger_.end(), history_.begin(),
+        [](const OperationRecord& a, const OperationRecord& b) {
+            return a == b; // 比較操作前的值和操作類型
+        });
+}
+
+void TwoCellFault::setTrigger(const int AI, const int VI, const std::vector<SingleOp>& seq) {
+    trigger_.clear();
+    if (type_ == TwoCellFaultType::Saa) {
+        // Saa 類型的觸發條件
+        coupleTriggerValue_ = VI; // 設定 couple trigger value 為 victim cell 的值
+    } else if (type_ == TwoCellFaultType::Svv) {
+        // Svv 類型的觸發條件
+        coupleTriggerValue_ = AI; // 設定 couple trigger value 為 aggressor cell 的值
+    }
+    // 設定觸發條件序列   
+    for (int i = 0; i < seq.size(); ++i) {
+        if (i == 0) {
+            if (type_ == TwoCellFaultType::Saa) {
+                trigger_.push_back({AI, seq[i]});
+            } else if (type_ == TwoCellFaultType::Svv) {
+                trigger_.push_back({VI, seq[i]});
+            }
+            continue;
+        }
+        trigger_.push_back({seq[i - 1].value, seq[i]});
+    }
+}
+
+std::string TwoCellFault::getTriggerInfo() const {
+    std::string seq = std::to_string(trigger_.front().beforeValue);
+    for (const auto& rec : trigger_) {
+        seq += rec.op.type == OperationType::READ ? "R" : "W";
+        seq += std::to_string(rec.op.value);
+    }
+    std::string finalF = std::to_string(faultValue_);
+    std::string finalR = (finalReadValue_ == UNPROCESS ? "-" : std::to_string(finalReadValue_));
+    if (type_ == TwoCellFaultType::Saa) {
+        return "< " + seq + " ; " + std::to_string(coupleTriggerValue_) + " / " + finalF + " / " + finalR + " >";
+    } else if (type_ == TwoCellFaultType::Svv) {
+        return "< " + std::to_string(coupleTriggerValue_) + " ; " + seq + " / " + finalF + " / " + finalR + " >";
+    }
+    return "< Invalid TwoCellFault type >"; // 錯誤處理
 }
 
 // -------------------------------
 // FaultSimulator implementation
 // -------------------------------
 
-FaultSimulator::FaultSimulator(const std::vector<FaultPrimitive>& f)
-    : faults(f), rng(std::random_device{}()) {
-}
-
-void FaultSimulator::runAll() {
+void FaultSimulator::runAll(std::vector<MarchElement>& marchSeq,
+                            std::unordered_map<FaultID, std::unique_ptr<BaseFault>>& faults) {
     // 初始化所有 fault 的 syndromes
-    All_syndromes.clear();
-    for(const auto& fp : faults) {
-        std::vector<SubcaseSynd> subcaseSynd_vec;
-        for(const auto& sc : fp.subs) {
-            for(int init : {0,1}) {
-                simulateSubcase(subcaseSynd_vec, sc, init);
-            }
+    for(auto& fault : faults) {
+        for(int init : {0,1}) {
+            simulateSubcase(marchSeq, fault.second);
         }
-        // 將每個 fault primitive 的 syndromes 存入 All_syndromes
-        All_syndromes[fp.name] = subcaseSynd_vec;
     }
 }
 
-std::pair<int,int> FaultSimulator::chooseAggVictim(const FaultSubcase& sc) {
-    // 隨機選擇 victim/agg obey sc.A
-    // ... implementation ...
-    int side = static_cast<int>(sqrt(MAX_ADDR));
-    if (sc.type == FaultType::SINGLE) {
-        // 單一 fault: 沒有 aggressor
-        std::uniform_int_distribution<int> dist(0, MAX_ADDR - 1);
-        int vic = dist(rng);
-        return {-1, vic}; // -1 表示沒有 aggressor
+void FaultSimulator::chooseAggVictim(const std::unique_ptr<BaseFault>& fault, int init) {
+    if (!fault) {
+        std::__throw_invalid_argument("Fault is null.");
     }
-    if (sc.A == 0) {
-        // aggressor < victim
-        // 隨機選擇一個合法的 victim
-        std::uniform_int_distribution<int> dist(1, MAX_ADDR - 1);
-        int vic = dist(rng);
-        if (vic / side == 0) {
-            // 如果是第一行，則不能選擇上面
-            return {vic - 1, vic}; // 左邊
-        } else if (vic % side == 0) {
-            // 如果是第一列，則不能選擇左邊
-            return {vic - side, vic}; // 上面
+
+    // 判斷 fault 的具體類型
+    if (auto oneCellFault = dynamic_cast<OneCellFault*>(fault.get())) {
+        // 處理 OneCellFault
+        std::uniform_int_distribution<int> dist(0, rows_ * cols_ - 1);
+        int victim = dist(rng_);
+        oneCellFault->setVictimState(victim, init); // 設定 victim 的初始狀態
+    } else if (auto twoCellFault = dynamic_cast<TwoCellFault*>(fault.get())) {
+        // 處理 TwoCellFault
+        std::uniform_int_distribution<int> dist(0, rows_ * cols_ - 1);
+        int victim = dist(rng_);
+        int aggressor;
+
+        if (victim / cols_ == 0) {
+            // 如果 victim 在第一行，aggressor 只能是左邊
+            aggressor = victim - 1;
+        } else if (victim % cols_ == 0) {
+            // 如果 victim 在第一列，aggressor 只能是上面
+            aggressor = victim - cols_;
         } else {
-            // 隨機選擇上面或左邊
+            // 隨機選擇 aggressor 是上面或左邊
             std::uniform_int_distribution<int> choice(0, 1);
-            if (choice(rng) == 0) {
-                return {vic - side, vic}; // 上面
-            } else {
-                return {vic - 1, vic}; // 左邊
-            }
+            aggressor = (choice(rng_) == 0) ? victim - cols_ : victim - 1;
         }
+
+        twoCellFault->setAggressorState(aggressor, init); // 設定 aggressor 的初始狀態
+        twoCellFault->setVictimState(victim, init);             // 設定 victim 的初始狀態
+    } else {
+        std::__throw_invalid_argument("Unsupported fault type.");
     }
-    if (sc.A == 1) {
-        // aggressor > victim
-        // 隨機選擇一個合法的 victim
-        std::uniform_int_distribution<int> dist(0, MAX_ADDR - 2);
-        int vic = dist(rng);
-        if (vic / side == side - 1) {
-            // 如果是最後一行，則不能選擇下面
-            return {vic + 1, vic}; // 右邊
-        } else if (vic % side == side - 1) {
-            // 如果是最後一列，則不能選擇右邊
-            return {vic + side, vic}; // 下面
-        } else {
-            // 隨機選擇下面或右邊
-            std::uniform_int_distribution<int> choice(0, 1);
-            if (choice(rng) == 0) {
-                return {vic + side, vic}; // 下面
-            } else {
-                return {vic + 1, vic}; // 右邊
-            }
-        }
-    }
-    std::cout << "Error: Invalid FaultSubcase A value: " << sc.A << std::endl;
-    return {-1, -1}; // 不應該到這裡
 }
 
-void FaultSimulator::simulateSubcase(std::vector<SubcaseSynd>& subcaseSynd_vec, const FaultSubcase& sc, int init) {
-    Memory mem(init);
-    auto [aggr, vic] = chooseAggVictim(sc);
-    mem.installFault(&sc, vic, aggr);
-    SubcaseSynd subcaseSynd;
-    for(const auto& elem : marchSeq) {
-        for(const auto& addr : iterateAddresses(elem.addr_order)) {
-            for(const auto& op : elem.ops) {
-                if(op.type==OpType::WRITE) {
-                    mem.writeCell(addr, op.value);
-                } else if(op.type==OpType::READ) {
-                    auto it = subcaseSynd.find(op.order);
-                    if (it == subcaseSynd.end()) {
-                        // 如果是第一次讀取，則初始化 syndrome
-                        OpSynd s;
-                        subcaseSynd[op.order] = s;
+void FaultSimulator::simulateSubcase(std::vector<MarchElement>& marchSeq, std::unique_ptr<BaseFault>& fault) {
+    const int initValue = 0;
+
+    if (!fault) {
+        std::__throw_invalid_argument("Fault is null.");
+    }
+    if (marchSeq.empty()) {
+        std::__throw_invalid_argument("March sequence is empty.");
+    }
+
+    chooseAggVictim(fault, initValue);
+
+    // 執行測試序列並收集偵測結果
+    for (int elemIdx = 0; elemIdx < marchSeq.size(); ++elemIdx) {
+        const auto& elem = marchSeq[elemIdx];
+        if (elem.is_asend) {
+            for (auto it = fault->getMemory().begin(); it != fault->getMemory().end(); ++it) {
+                // 依照 address 由小到大正序執行
+                for (int opIdx = 0; opIdx < elem.ops.size(); ++opIdx) {
+                    const auto& op = elem.ops[opIdx];
+                    MarchOpIdx marchOpIdx{elemIdx, opIdx};
+                    if (op.type == OperationType::READ) {
+                        fault->onRead(it->first, marchOpIdx, op);
+                    } else if (op.type == OperationType::WRITE) {
+                        fault->onWrite(it->first, op);
                     }
-                    int readValue = mem.readCell(addr, op.value);
-                    // 檢查是否有 fault 觸發
-                    if (readValue != op.value) {
-                        // Fault detected
-                        subcaseSynd[op.order].detected = true;
-                        subcaseSynd[op.order].addresses.push_back(addr);
+                }
+            }
+        } else  {
+            for (auto it = fault->getMemory().rbegin(); it != fault->getMemory().rend(); ++it) {
+                // 依照 address 由大到小倒序執行
+                for (int opIdx = 0; opIdx < elem.ops.size(); ++opIdx) {
+                    const auto& op = elem.ops[opIdx];
+                    MarchOpIdx marchOpIdx{elemIdx, opIdx};
+                    if (op.type == OperationType::READ) {
+                        fault->onRead(it->first, marchOpIdx, op);
+                    } else if (op.type == OperationType::WRITE) {
+                        fault->onWrite(it->first, op);
                     }
                 }
             }
         }
-        mem.clearElementQueues();
     }
-    subcaseSynd_vec.push_back(subcaseSynd);
-}
-
-std::vector<int> FaultSimulator::iterateAddresses(bool addr_order) {
-    std::vector<int> addrs;
-    if (!addr_order) {
-        for (int i = 0; i < MAX_ADDR; ++i) {
-            addrs.push_back(i);
-        }
-    } else {
-        for (int i = MAX_ADDR - 1; i >= 0; --i) {
-            addrs.push_back(i);
-        }
-    }
-    return addrs;
 }

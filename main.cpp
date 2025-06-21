@@ -12,12 +12,12 @@
 int main(int argc, char** argv) {
     Parser parser(argc, argv);
     // 1. load fault definitions
-    const auto &faultList = parser.parseFaultFile();
+    auto faultList = parser.parseFaultFile();
     // 2. hardcoded March string
     // March test algorithms menu
-    const auto &marchSeq = parser.parseMarchString();
+    auto marchSeq = parser.parseMarchString();
     // 3. run simulation
-    FaultSimulator sim(faultList);
+    FaultSimulator sim(4, 4, 123456789); // 假設 4x4 的記憶體陣列，隨機種子為 123456789
 
     // MarchGenerator gen(sim);
     // int length;
@@ -32,9 +32,8 @@ int main(int argc, char** argv) {
     // auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
     // std::cout << "Generate time: " << duration.count() << " ms" << std::endl;
 
-    sim.setMarchSequence(marchSeq);
-    sim.runAll();
+    sim.runAll(marchSeq, faultList);
     // // 4. output syndromes
-    parser.parserOutSyndrome(sim.getAllSyndromes(), faultList);
+    parser.parserOutSyndrome(faultList);
     return 0;
 }

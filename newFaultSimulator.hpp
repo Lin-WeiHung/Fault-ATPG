@@ -50,11 +50,11 @@ struct OperationRecord {
 enum class FaultType { SINGLE, COUPLING };
 
 // 用於 FaultType 和 subcaseIdx 的組合作為 key
-struct FaultIdx {
+struct FaultID {
     std::string faultName; // Fault 名稱
     int subcaseIdx;
 
-    bool operator==(const FaultIdx& other) const {
+    bool operator==(const FaultID& other) const {
         return faultName == other.faultName && subcaseIdx == other.subcaseIdx;
     }
 };
@@ -62,8 +62,8 @@ struct FaultIdx {
 // 提供給 unordered_map 使用的 hash 函數
 namespace std {
     template <>
-    struct hash<FaultIdx> {
-        std::size_t operator()(const FaultIdx& k) const {
+    struct hash<FaultID> {
+        std::size_t operator()(const FaultID& k) const {
             return (std::hash<std::string>()(k.faultName) << 32) ^ std::hash<int>()(k.subcaseIdx);
         }
     };
@@ -83,7 +83,7 @@ struct FaultFeature {
 
 // 扁平化偵測結果，方便 GUI 顯示
 struct DetectionRecord {
-    FaultIdx name_and_idx; // FaultIdx 組合
+    FaultID name_and_idx; // FaultIdx 組合
     std::map<MarchOpIdx, int> syndrome; // MarchOpIdx 與偵測結果的對應
     std::set<int> vicAddrs;
 };
@@ -135,19 +135,17 @@ public:
     void clearMatcher();
 };
 
-struct FaultCellGroup {
-    std::vector
 // Fault Simulator 主流程
 class FaultSimulator {
     int rows_, cols_;
     std::mt19937_64 rng_;
-    std::unordered_map<FaultIdx, DetectionRecord> detectionRecords_; // 偵測結果
+    std::unordered_map<FaultID, DetectionRecord> detectionRecords_; // 偵測結果
     std::map<int, Cell> mem; // 建記憶體 cells
 public:
     FaultSimulator(int rows, int cols, uint64_t seed);
 
     void runSimulation(
-        std::unordered_map<FaultIdx, FaultFeature>& features,
+        std::unordered_map<FaultID, FaultFeature>& features,
         std::vector<MarchElement>& marchSeq);
 private:
     // 模擬單一 subcase
