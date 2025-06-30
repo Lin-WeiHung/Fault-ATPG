@@ -107,7 +107,7 @@ void Parser::parserOutSyndrome(const std::unordered_map<FaultID, std::unique_ptr
     for (const auto& faultID : faultIDs) {
         const auto& fault = faults.at(faultID);
         // Output fault information
-        ofs << faultID.faultName << " Subcase " << faultID.subcaseIdx;
+        ofs << faultID.faultName_ << " Subcase " << faultID.subcaseIdx_;
         ofs << fault->getTriggerInfo();
         // Output syndrome
         if (!fault->isDetected()) {

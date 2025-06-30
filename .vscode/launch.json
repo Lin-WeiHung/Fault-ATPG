@@ -5,7 +5,7 @@
             "name": "(gdb) Launch",
             "type": "cppdbg",
             "request": "launch",
-            "program": "/home/bb232399/CIM/Simulator/main",
+            "program": "/home/bb232399/CIM/Simulator/test/t_SequenceExecutor",
             "args": ["fault.json", "marchTest.json"],
             "stopAtEntry": false,
             "cwd": "/home/bb232399/CIM/Simulator",

@@ -50,11 +50,11 @@ struct OperationRecord {
 
 // 用於 FaultType 和 subcaseIdx 的組合作為 key
 struct FaultID {
-    std::string faultName; // Fault 名稱
-    int subcaseIdx;
+    std::string faultName_; // Fault 名稱
+    int subcaseIdx_;
 
     bool operator==(const FaultID& other) const {
-        return faultName == other.faultName && subcaseIdx == other.subcaseIdx;
+        return faultName_ == other.faultName_ && subcaseIdx_ == other.subcaseIdx_;
     }
 };
 
@@ -63,7 +63,7 @@ namespace std {
     template <>
     struct hash<FaultID> {
         std::size_t operator()(const FaultID& k) const {
-            return (std::hash<std::string>()(k.faultName) << 32) ^ std::hash<int>()(k.subcaseIdx);
+            return (std::hash<std::string>()(k.faultName_) << 32) ^ std::hash<int>()(k.subcaseIdx_);
         }
     };
 }
