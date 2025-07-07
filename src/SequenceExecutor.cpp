@@ -6,14 +6,18 @@ void SequenceExecutor::execute( const std::vector<MarchElement>& marchTest, IFau
         return;
     }
     for (const auto& elem : marchTest) {
-        auto iterate = [&](auto begin, auto end, auto step){
-            for (auto addr = begin; addr != end; addr += step)
+        fault.reset(); // Reset fault state for each March element
+        if (elem.addrOrder_ == Direction::ASC || elem.addrOrder_ == Direction::BOTH) {
+            // Process operations in ascending order
+            for (int addr = 0; addr < memSize_; ++addr) {
                 processElementAtAddr(elem, fault, addr);
-        };
-        if (elem.addrOrder_ == Direction::ASC || elem.addrOrder_ == Direction::BOTH)
-            iterate(size_t{0}, memSize_, size_t{1});
-        if (elem.addrOrder_ == Direction::DESC)
-            iterate(memSize_-1, size_t(-1), size_t(-1));
+            }
+        } else if (elem.addrOrder_ == Direction::DESC) {
+            // Process operations in descending order
+            for (int addr = memSize_ - 1; addr >= 0; --addr) {
+                processElementAtAddr(elem, fault, addr);
+            }
+        }
     }
 }
 
@@ -23,7 +27,9 @@ void SequenceExecutor::processElementAtAddr(const MarchElement& elem, IFault& fa
             // Read operation
             int value = fault.readProcess(mem_idx, op.op_);
             if (value != op.op_.value_) {
-                collector_.opDetected(op.idx_, mem_idx);
+                collector_.opRecord(op.idx_, mem_idx, true); // Record detection
+            } else {
+                collector_.opRecord(op.idx_, mem_idx, false); // Record no detection
             }
         } else if (op.op_.type_ == OpType::W) {
             // Write operation

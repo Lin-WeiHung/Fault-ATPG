@@ -16,6 +16,8 @@ public:
     
     // Read a value from the given address. Returns defaultValue_ if not initialized.
     virtual int read(int address) const = 0;
+
+    virtual void reset() = 0;
     
 protected:
     int defaultValue_;
@@ -23,7 +25,7 @@ protected:
 
 // Dense memory implementation using a contiguous vector.
 // Uninitialized cells are set to default value.
-class DenseMemoryState : public MemoryState {
+class DenseMemoryState final: public MemoryState {
 public:
     // Construct with given memory size and default value.
     DenseMemoryState(int row, int col, int defaultValue)
@@ -36,7 +38,7 @@ public:
     int read(int address) const override;
 
     // Reset the memory to the default value.
-    void reset() {
+    void reset() override {
         std::fill(data_.begin(), data_.end(), defaultValue_);
     }
 

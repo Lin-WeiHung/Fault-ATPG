@@ -1,29 +1,32 @@
 {
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "name": "(gdb) Launch",
-            "type": "cppdbg",
-            "request": "launch",
-            "program": "/home/bb232399/CIM/Simulator/test/t_SequenceExecutor",
-            "args": ["fault.json", "marchTest.json"],
-            "stopAtEntry": false,
-            "cwd": "/home/bb232399/CIM/Simulator",
-            "environment": [],
-            "externalConsole": false,
-            "MIMode": "gdb",
-            "setupCommands": [
-                {
-                    "description": "啟用 gdb 的美化顯示",
-                    "text": "-enable-pretty-printing",
-                    "ignoreFailures": true
-                },
-                {
-                    "description": "將反組譯碼變體設為 Intel",
-                    "text": "-gdb-set disassembly-flavor intel",
-                    "ignoreFailures": true
-                }
-            ]
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "C++ Debug (gdb)",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "/home/bb232399/CIM/Simulator/main",
+      "args": ["fault.json", "marchTest.json"],
+      "stopAtEntry": false,
+      "cwd": "/home/bb232399/CIM/Simulator",
+      "MIMode": "gdb",
+      "miDebuggerPath": "/usr/bin/gdb",
+      "environment": [],
+      "setupCommands": [
+        { // ① 開啟 STL pretty-printing
+          "description": "Enable libstdc++ pretty printers",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        },
+        { // ② 讓 gdb 載入 xmethods（如果你的發行版沒有自動載入）
+          "text": "python import sys,os; p='/usr/share/gcc-13/python';\n if p not in sys.path: sys.path.insert(0,p);\n from libstdcxx.v6.printers import register_libstdcxx_printers;\n from libstdcxx.v6.xmethods import register_libstdcxx_xmethods;\n register_libstdcxx_printers(None); register_libstdcxx_xmethods(None)",
+          "ignoreFailures": true
         }
-    ]
+      ],
+      // ③（選擇性）自訂 Natvis，可放多個
+      "visualizerFile": "${workspaceFolder}/.vscode/stl.natvis",
+      "externalConsole": false
+    }
+  ]
 }
+

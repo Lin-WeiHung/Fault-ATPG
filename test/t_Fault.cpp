@@ -5,9 +5,11 @@
 #include <cassert>
 #include <iostream>
 #include <memory>
-#include "Fault.hpp"        // Fault / Trigger 主要邏輯
-#include "FaultConfig.hpp"  // 使用者定義的配置結構
-#include "MemoryState.hpp"  // DenseMemoryState
+#include "../include/Fault.hpp"        // Fault / Trigger 主要邏輯
+#include "../src/Fault.cpp"
+#include "../include/FaultConfig.hpp"  // 使用者定義的配置結構
+#include "../include/MemoryState.hpp"  // DenseMemoryState
+#include "../src/MemoryState.cpp"
 
 using Op   = OpType;                           // 簡寫
 using MI   = MarchIdx;                         // March 位置索引
@@ -140,14 +142,20 @@ void test_OneCellFault_SSF_W()
     auto cfg  = makeBaseCfg();
     cfg->VI_            = INIT_0;
     cfg->faultValue_    = INIT_0;      // 故障後 cell 強制 0
-    cfg->finalReadValue_= INIT_0;
+    cfg->finalReadValue_= -1;
     cfg->trigger_       = { W(1) };    // S = W1 —— 單操作 (static)
 
     auto fault = FaultFactory::makeOneCellFault(cfg, mem, VIC_ADDR);
 
     // 在 fault 之前，嘗試將 cell 寫為 1
     fault->writeProcess(VIC_ADDR, W(1));    // 觸發後 payload 把它寫回 0
-    assert(mem->read(VIC_ADDR) == INIT_0);  // 應 stuck 在 0
+    assert(mem->read(VIC_ADDR) == cfg->faultValue_);  // 應 stuck 在 0
+    int val = fault->readProcess(VIC_ADDR, R(1)); // 讀取
+    assert(val == cfg->faultValue_);
+    fault->writeProcess(VIC_ADDR, W(0));    // 觸發後 payload 把它寫回 0
+    assert(mem->read(VIC_ADDR) == 0);  // 寫0成功
+    val = fault->readProcess(VIC_ADDR, R(0)); // 再次讀取
+    assert(val == 0); // 讀取仍然是 0
 }
 
 //---------------------------------------------------------------------
@@ -253,8 +261,8 @@ void test_TwoCellFault_DCF_Sv_R()
     int tmp = fault->readProcess(VIC_ADDR, R(1)); // 第一 R
     assert(tmp == INIT_1); // 正確讀取1
     int val = fault->readProcess(VIC_ADDR, R(1)); // 第二 R => 觸發
-    assert(val == INIT_0);
-    assert(mem->read(VIC_ADDR) == INIT_0); // Victim 現在應為 0
+    assert(val == cfg->finalReadValue_);
+    assert(mem->read(VIC_ADDR) == cfg->faultValue_); // Victim 現在應為 0
 }
 
 //---------------------------------------------------------------------

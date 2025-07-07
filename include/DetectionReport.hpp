@@ -4,7 +4,6 @@
 #include <vector>
 #include <map>
 #include <set>
-#include "FaultConfig.hpp"
 #include "March.hpp"
 
 // Represents the result of the fault simulation for reporting.

@@ -8,7 +8,10 @@ OneCellSequenceTrigger::OneCellSequenceTrigger(int vicAddr,
 }
 
 void OneCellSequenceTrigger::feed(int addr, const SingleOp& op, int beforeValue) {
-    if (addr != vicAddr_) return;
+    if (addr != vicAddr_) {
+        matched_ = false; // 只要餵入非 victim cell 的操作，就重置 matched 狀態
+        return;
+    }
     history_.push_back({beforeValue, op});
     if (history_.size() > pattern_.size()) history_.pop_front();
     matched_ = (history_ == pattern_);
@@ -98,12 +101,12 @@ std::unique_ptr<OneCellFault> OneCellFault::create(std::shared_ptr<const FaultCo
 
 void OneCellFault::writeProcess(int addr, const SingleOp& op) {
     int before = mem_->read(addr);
+    mem_->write(addr, op.value_);
     trigger_->feed(addr, op, before);
     if (trigger_->matched()) {
         payload();
         return; 
     }
-    mem_->write(addr, op.value_);
 }
 
 int OneCellFault::readProcess(int addr, const SingleOp& op) {

@@ -132,7 +132,7 @@ std::vector<FaultConfig> Parser::parseFaults(const std::string& filename) const
 
 // ─────────────── parseMarchTest ───────────────────────────────────────
 std::vector<MarchElement>
-Parser::parseMarchTest(const std::string& filename) const
+Parser::parseMarchTest(const std::string& filename)
 {
     std::ifstream ifs(filename);
     if (!ifs) throw std::runtime_error("無法開啟檔案: " + filename);
@@ -156,6 +156,7 @@ Parser::parseMarchTest(const std::string& filename) const
         throw std::runtime_error("Invalid selection");
 
     const json& jSel = jf[choice - 1];
+    marchTestName_ = marchNames[choice - 1];
     std::string pattern = jSel.at("pattern").get<std::string>();
     /* ───────────────────────────────────────────────────── */
 
@@ -217,5 +218,104 @@ Parser::parseMarchTest(const std::string& filename) const
         result.push_back(std::move(elem));
         ++elemIdx;
     }
-    return result;     // 順序：seg→token→(拆炸後) SingleOp
+    return result;
+}
+// ─────────────── writeDetectionReport ─────────────────────────────────
+void Parser::writeDetectionReport(const std::vector<FaultConfig>& faults,
+                                  double detectedRate,
+                                  const std::string& filename) const {
+    std::ofstream ofs(filename);
+    if (!ofs) throw std::runtime_error("無法開啟輸出檔案: " + filename);
+    ofs << "Detected Rate: " << detectedRate * 100 << "%\n\n";
+    for (const auto& fault : faults) {
+        ofs << fault.id_.faultName_ << "\nSubcase " << fault.id_.subcaseIdx_ << " ";
+        ofs << processSFR(fault) << "\n";
+        // init0 健康報告
+        ofs << "Init 0: ";
+        // Output syndrome
+        if (!fault.init0_healthReport_.isDetected_) {
+            ofs << "No detection\n";
+        } else {
+            std::string bits;
+            for (const auto& it : fault.init0_healthReport_.detected_) {
+                bits += (it.second == 1) ? '1' : '0';
+            }
+            ofs << bits << " (";
+            // Convert bits string to hex
+            if (!bits.empty()) {
+                unsigned long long value = std::stoull(bits, nullptr, 2);
+                ofs << "0x" << std::hex << value << std::dec;
+            }
+            ofs << ")\n";
+
+            for (const auto& it : fault.init0_healthReport_.detected_) {
+                if (it.second) {
+                    ofs << "M" << it.first.marchIdx << "(" << it.first.opIdx << ") ";
+                }
+            }
+            ofs << "\n";
+        }
+        // init1 健康報告
+        ofs << "Init 1: ";
+        // Output syndrome
+        if (!fault.init1_healthReport_.isDetected_) {
+            ofs << "No detection\n";
+            continue;
+        } else {
+            std::string bits;
+            for (const auto& it : fault.init1_healthReport_.detected_) {
+                bits += (it.second == 1) ? '1' : '0';
+            }
+            ofs << bits << " (";
+            // Convert bits string to hex
+            if (!bits.empty()) {
+                unsigned long long value = std::stoull(bits, nullptr, 2);
+                ofs << "0x" << std::hex << value << std::dec;
+            }
+            ofs << ")\n";
+
+            for (const auto& it : fault.init1_healthReport_.detected_) {
+                if (it.second) {
+                    ofs << "M" << it.first.marchIdx << "(" << it.first.opIdx << ") ";
+                }
+            }
+            ofs << "\n\n";
+        }
+    }
+}
+
+// ─────────────── processSFR ───────────────────────────────────────────
+std::string Parser::processSFR(const FaultConfig& fault) const {
+    std::string out;
+    if (fault.is_twoCell_) {
+        
+        out += "< " + std::to_string(fault.AI_);
+        if (fault.twoCellFaultType_ == TwoCellFaultType::Sa) {
+            for (const auto& sop : fault.trigger_) {
+                out += sop.type_ == OpType::R ? 'R' : 'W';
+                out += std::to_string(sop.value_);
+            }
+            out += "; " + std::to_string(fault.VI_);
+        } else if (fault.twoCellFaultType_ == TwoCellFaultType::Sv) {
+            out += "; " + std::to_string(fault.VI_);
+            for (const auto& sop : fault.trigger_) {
+                out += sop.type_ == OpType::R ? 'R' : 'W';
+                out += std::to_string(sop.value_);
+            }
+        }
+        
+        out += " / " + std::to_string(fault.faultValue_);
+        out += " / " + std::to_string(fault.finalReadValue_);
+        out += " >";
+        out += (fault.is_A_less_than_V_ ? " (A<V)" : " (A>V) ");
+    } else {
+        out += "< " + std::to_string(fault.VI_);
+        for (const auto& sop : fault.trigger_) {
+            out += sop.type_ == OpType::R ? 'R' : 'W';
+            out += std::to_string(sop.value_);
+        }
+        out += " / " + std::to_string(fault.faultValue_);
+        out += " / " + std::to_string(fault.finalReadValue_) + " >";
+    }
+    return out;
 }

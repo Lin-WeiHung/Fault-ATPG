@@ -2,8 +2,11 @@
 #include <memory>
 #include <cassert>
 #include "../include/SequenceExecutor.hpp"
+#include "../src/SequenceExecutor.cpp"
 #include "../include/Fault.hpp"
+#include "../src/Fault.cpp"
 #include "../include/ResultCollector.hpp"
+#include "../src/ResultCollector.cpp"
 
 
 class StubFault : public IFault {
@@ -12,13 +15,15 @@ public:
     int readProcess(int addr, const SingleOp& op) override {
         return invert_ == 1 ? op.value_ ^ 1 : op.value_;
     }
-    void writeProcess(int, const SingleOp&) override {}
+    void writeProcess(int addr, const SingleOp& op) override {return;}
     bool invert_{0};
 };
 class StubCollector : public IResultCollector {
 public:
-    void opDetected(const MarchIdx& op, int addr) override { hits_.push_back({op, addr}); }
-    std::vector<std::pair<const MarchIdx&, int>> hits_;
+    void opRecord(const MarchIdx& idx, int addr, bool isDetected) override { hits_.push_back({idx, addr, isDetected}); }
+    DetectionReport getReport() const override { return DetectionReport(); }
+    void reset() override { hits_.clear(); } // Reset the collector for a new simulation
+    std::vector<std::tuple<const MarchIdx&, int, bool>> hits_;
 };
 
 // ---------------------------------
@@ -60,7 +65,7 @@ void testInvertASC() {
     StubCollector col;
     SequenceExecutor exe(memSize, col);
     exe.execute(march, fault);
-    assert(col.hits_.size() == 1);  // 會有一個Read偵測到故障
+    assert(col.hits_.size() == memSize);  // 會有一個Read偵測到故障
 }
 
 void testNormalBOTH() {
@@ -80,7 +85,7 @@ void testInvertBOTH() {
     StubCollector col;
     SequenceExecutor exe(memSize, col);
     exe.execute(march, fault);
-    assert(col.hits_.size() == 1);  // 會有一個Read偵測到故障
+    assert(col.hits_.size() == memSize);  // 會有一個Read偵測到故障
 }
 
 void testNormalDESC() {
@@ -100,7 +105,7 @@ void testInvertDESC() {
     StubCollector col;
     SequenceExecutor exe(memSize, col);
     exe.execute(march, fault);
-    assert(col.hits_.size() == 1);  // 會有一個Read偵測到故障
+    assert(col.hits_.size() == memSize);  // 會有一個Read偵測到故障
 }
 
 void testEmptyMarch() {

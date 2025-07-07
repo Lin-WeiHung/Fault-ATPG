@@ -124,6 +124,7 @@ public:
     // 由外部顯式呼叫，或由 Factory 內部調用
     virtual void writeProcess(int addr, const SingleOp& op) = 0;
     virtual int  readProcess (int addr, const SingleOp& op) = 0;
+    void reset() { trigger_->reset(); }
     virtual ~IFault() = default;
 };
 

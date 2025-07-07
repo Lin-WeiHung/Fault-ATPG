@@ -19,14 +19,19 @@ public:
     std::vector<FaultConfig> parseFaults(const std::string& filename) const;
 
     // Parse a test pattern (sequence of SingleOp) from a JSON file.
-    std::vector<MarchElement> parseMarchTest(const std::string& filename) const;
+    std::vector<MarchElement> parseMarchTest(const std::string& filename);
 
     // Write detection results (syndrome, coverage) to an output file.
+    void writeDetectionReport(const std::vector<FaultConfig>& faults, 
+                              double detectedRate,
+                              const std::string& filename) const;
 private:
+    std::string marchTestName_;
     // 共用小工具（與 JSON 庫無關）
     int                toInt(const std::string& raw) const;                 // "-" → -1
     SingleOp           toSingleOp(char opKind, char value) const;           // R0 / W1 …
     std::vector<SingleOp> explodeOpToken(const std::string& token) const;   // R0W1 → {R0,W1}
+    std::string        processSFR(const FaultConfig& fault) const;
 };
 
 #endif // PARSER_H

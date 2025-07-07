@@ -5,6 +5,7 @@
 #include <vector>
 #include <functional>
 #include "March.hpp"
+#include "DetectionReport.hpp"
 
 enum class TwoCellFaultType { Sa, Sv };
 // Represents configuration for a fault from input.
@@ -49,6 +50,9 @@ public:
     bool is_A_less_than_V_; // Indicates if aggressor < victim (for two-cell faults)
     TwoCellFaultType twoCellFaultType_; // Type of fault (e.g., "Sa", "Sv", etc.)
     int AI_;            // Initial aggressor value (if applicable)
+
+    DetectionReport init0_healthReport_; // Report on the health of the fault
+    DetectionReport init1_healthReport_; // Report on the health of the fault
 };
 
 

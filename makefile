@@ -3,6 +3,7 @@ CXX       := g++
 CXXFLAGS  := -std=c++20 -O2 -Wall -Wextra -g
 INCLUDES  := -Iinclude
 LDFLAGS   :=    
+OUT 	 := Fault_simulator
 
                                 
 # ======== 自動偵測 ========
@@ -27,11 +28,14 @@ endif
 com: main
 
 main: $(OBJS)
-	$(CXX) $(CXXFLAGS) $(INCLUDES) -o $@ $^ $(LDFLAGS)
+	$(CXX) $(CXXFLAGS) $(INCLUDES) $(SRC_CPP) -o $(OUT) $(LDFLAGS)
 
 # make run ARGS="file1 file2 ..."
+ARGS = fault.json marchTest.json
+OUTPUTFILE = detection_report.txt
 run: main
-	./main $(ARGS)
+	./$(OUT) $(ARGS) $(OUTPUTFILE)
+	python3 txt2excel.py $(OUTPUTFILE) $(OUTPUTFILE:.txt=.xlsx)
 
 # ======== 測試機制 ========
 # make test → 列出所有可用測試並編號
@@ -52,7 +56,7 @@ $(foreach n,$(NUMBERS),$(eval $(call MAKE_NUM_RULE,$(n))))
 run-test:
 	@echo ">> 正在編譯 ：$(TEST)"
 	$(CXX) $(CXXFLAGS) $(INCLUDES) \
-			$(SRC_CPP) $(TEST_DIR)/t_$(TEST).cpp \
+			$(TEST_DIR)/t_$(TEST).cpp \
 			-o $(TEST_DIR)/t_$(TEST) $(LDFLAGS)
 	./$(TEST_DIR)/t_$(TEST)
 
@@ -60,7 +64,7 @@ run-test:
 clean:
 	$(RM) $(OBJS) $(TEST_DIR)/*[^.cpp] $(SRC_DIR)/*.o
 
-.PHONY: com run test run-test clean $(NUMBERS)
+.PHONY: com run test run-test clean
 
 print-vars:
 	@echo "SRC_DIR   = $(SRC_DIR)"
@@ -69,4 +73,3 @@ print-vars:
 	@echo "TEST_DIR  = $(TEST_DIR)"
 	@echo "TEST_SRC  = $(TEST_SRC)"
 	@echo "TEST_NAMES= $(TEST_NAMES)"
-	@echo "NUMBERS   = $(NUMBERS)"

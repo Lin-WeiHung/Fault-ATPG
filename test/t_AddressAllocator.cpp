@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cassert>
 #include "../include/AddressAllocator.hpp"
+#include "../src/AddressAllocator.cpp"
 
 void testSingleCellFault() {
     AddressAllocator allocator(10, 10, 12345); // 10x10 memory grid, seed = 12345

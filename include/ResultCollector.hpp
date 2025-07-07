@@ -1,29 +1,25 @@
 #ifndef RESULT_COLLECTOR_H
 #define RESULT_COLLECTOR_H
 
-#include <unordered_map>
 #include "DetectionReport.hpp"
 
 // Collects fault detection results during simulation.
 class IResultCollector {
 public:
-    virtual void opDetected(const MarchIdx& idx, int addr) = 0;
+    virtual void opRecord(const MarchIdx& idx, int addr, bool isDetected) = 0;
+    virtual DetectionReport getReport() const = 0;
+    virtual void reset() = 0; // Reset the collector for a new simulation
     virtual ~IResultCollector() = default;
-protected:
-    DetectionReport results_; // Store detection results
 };
 
-class ResultCollector : public IResultCollector {
+class OneByOneResultCollector : public IResultCollector {
 public:
-    void createReport(const std::vector<MarchElement>& marchElements);
-
-    void opDetected(const MarchIdx& idx, int addr) override;
-    // Build and return the final detection report.
-    DetectionReport getReport() const { return results_; }
-
+    void opRecord(const MarchIdx& idx, int addr, bool isDetected) override;
+    DetectionReport getReport() const override { return report_; }
+    void reset() override { report_ = DetectionReport(); } // Reset the report
 private:
     // Map of fault IDs to their detection reports
-    DetectionReport results_;
+    DetectionReport report_;
 };
 
 #endif // RESULT_COLLECTOR_H

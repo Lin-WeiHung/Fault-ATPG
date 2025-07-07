@@ -3,7 +3,8 @@
 #include <sstream>
 #define private   public
 #define protected public
-#include "Parser.hpp"
+#include "../include/Parser.hpp"        // Parser / explodeOpToken
+#include "../src/Parser.cpp"
 
 // 方便重複驗證字串 → int 轉換
 void test_toInt() {
@@ -68,11 +69,39 @@ void test_parseMarchTest_invalid_index() {
     assert(threw);
 }
 
+// 驗證能正確產生報告檔 (僅測試「未偵測」路徑，涵蓋 I/O、格式基本正確性)
+void test_writeDetectionReport() {
+    Parser p;
+    auto faults = p.parseFaults("fault.json"); // 尚未執行模擬 → 預設皆未偵測
+    const std::string fname = "t_detection_report.txt";
+
+    // 呼叫待測函式
+    p.writeDetectionReport(fname, faults);
+
+    // 檔案應該被成功建立並且可讀
+    std::ifstream ifs(fname);
+    assert(ifs && "❌ 產生 report 失敗");
+
+    std::stringstream buffer; buffer << ifs.rdbuf();
+    std::string txt = buffer.str();
+    assert(!txt.empty() && "❌ Report 內容為空");
+
+    // (1) 至少包含一次 "No detection" 字串
+    assert(txt.find("No detection") != std::string::npos && "❌ 缺少 \"No detection\" 標記");
+
+    // (2) 每條 fault 都應該對應一行結果 (用出現次數粗略驗證)
+    size_t subcase_cnt = 0;
+    for (size_t pos = txt.find(" Subcase "); pos != std::string::npos; pos = txt.find(" Subcase ", pos + 8))
+        ++subcase_cnt;
+    assert(subcase_cnt == faults.size() && "❌ Subcase 行數與 fault 數量不符");
+}
+
 int main() {
     test_toInt();
     test_explodeOpToken();
     test_parseFaults();
     test_parseMarchTest_ok();
     test_parseMarchTest_invalid_index();
+    test_writeDetectionReport();
     std::cout << "✅  All cassert tests passed!\n";
 }
