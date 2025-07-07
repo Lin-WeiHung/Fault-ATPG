@@ -3,12 +3,14 @@ CXX       := g++
 CXXFLAGS  := -std=c++20 -O2 -Wall -Wextra -g
 INCLUDES  := -Iinclude
 LDFLAGS   :=    
-OUT 	 := Fault_simulator
+OUT 	 := Fault_simulator.exe
 
                                 
 # ======== 自動偵測 ========
 SRC_DIR   := src
-TEST_DIR  := test
+TEST_DIR  := tests
+INPUT_DIR := input
+OUT_DIR   := output
 
 SRC_CPP   := $(wildcard $(SRC_DIR)/*.cpp)
 OBJS      := $(patsubst %.cpp,%.o,$(SRC_CPP))
@@ -34,8 +36,8 @@ FAULT = fault.json
 MARCH = March-LSD.json
 OUTPUTFILE = Detection_report.txt
 run:
-	./$(OUT) $(FAULT) $(MARCH) $(OUTPUTFILE)
-	python3 txt2excel.py $(OUTPUTFILE) $(OUTPUTFILE:.txt=.xlsx)
+	./$(OUT) $(INPUT_DIR)/$(FAULT) $(INPUT_DIR)/$(MARCH) $(OUT_DIR)/$(OUTPUTFILE)
+	python3 python/txt2excel.py $(OUT_DIR)/$(OUTPUTFILE) $(OUT_DIR)/$(OUTPUTFILE:.txt=.xlsx)
 
 make all: com run
 

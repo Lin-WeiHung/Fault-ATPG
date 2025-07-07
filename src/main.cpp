@@ -12,9 +12,6 @@ int main(int argc, char* argv[])
     }
 
     try {
-        // 開始計時
-        auto start = std::chrono::high_resolution_clock::now();
-
         Parser parser;
         auto faults = parser.parseFaults(argv[1]);
         auto marchTest = parser.parseMarchTest(argv[2]);
@@ -35,16 +32,23 @@ int main(int argc, char* argv[])
             throw std::invalid_argument("Row and column dimensions must be positive integers.");
         }
 
+        // 開始計時
+        auto start = std::chrono::high_resolution_clock::now();
+
         OneByOneFaultSimulator faultSim(faults, marchTest, rows, cols, seed);
         faultSim.run();
-        // Write detection report
-        parser.writeDetectionReport(faults, faultSim.getDetectedRate(), argv[3]);
 
         // 結束計時
         auto end = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-
         std::cout << "Execution time: " << duration.count() << " ms\n";
+
+        // Write detection report
+        parser.writeDetectionReport(faults, faultSim.getDetectedRate(), argv[3]);
+
+        
+
+        
     } catch (const std::exception& e) {
         std::cerr << "Error: " << e.what() << "\n";
         return 1;
