@@ -24,18 +24,20 @@ ifneq ($(strip $(TEST_NAMES)),)
 endif
 
 # ======== 一般編譯 ========
-# make com → 編譯整套程式 (執行檔名 main)
-com: main
-
-main: $(OBJS)
+# make com → 編譯整套程式
+com: $(OBJS)
 	$(CXX) $(CXXFLAGS) $(INCLUDES) $(SRC_CPP) -o $(OUT) $(LDFLAGS)
 
-# make run ARGS="file1 file2 ..."
-ARGS = fault.json marchTest.json
-OUTPUTFILE = detection_report.txt
-run: main
-	./$(OUT) $(ARGS) $(OUTPUTFILE)
+# make run → 執行 Fault_simulator
+# 需要提供 faults.json、marchTest.json 和輸出檔案名稱
+FAULT = fault.json
+MARCH = March-LSD.json
+OUTPUTFILE = Detection_report.txt
+run:
+	./$(OUT) $(FAULT) $(MARCH) $(OUTPUTFILE)
 	python3 txt2excel.py $(OUTPUTFILE) $(OUTPUTFILE:.txt=.xlsx)
+
+make all: com run
 
 # ======== 測試機制 ========
 # make test → 列出所有可用測試並編號
@@ -73,3 +75,4 @@ print-vars:
 	@echo "TEST_DIR  = $(TEST_DIR)"
 	@echo "TEST_SRC  = $(TEST_SRC)"
 	@echo "TEST_NAMES= $(TEST_NAMES)"
+	@echo "NUMBERS   = $(NUMBERS)"

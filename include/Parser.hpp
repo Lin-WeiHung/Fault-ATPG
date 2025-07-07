@@ -18,8 +18,10 @@ public:
     // Parse fault configurations from a JSON file.
     std::vector<FaultConfig> parseFaults(const std::string& filename) const;
 
-    // Parse a test pattern (sequence of SingleOp) from a JSON file.
-    std::vector<MarchElement> parseMarchTest(const std::string& filename);
+    // Parse a test pattern (sequence of SingleOp) from a JSON file 
+    std::vector<MarchElement> parseMarchTest_menu(const std::string& filename); // With menu selection
+    std::vector<MarchElement> parseMarchTest(const std::string& filename); 
+    
 
     // Write detection results (syndrome, coverage) to an output file.
     void writeDetectionReport(const std::vector<FaultConfig>& faults, 

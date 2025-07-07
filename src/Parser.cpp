@@ -132,7 +132,7 @@ std::vector<FaultConfig> Parser::parseFaults(const std::string& filename) const
 
 // ─────────────── parseMarchTest ───────────────────────────────────────
 std::vector<MarchElement>
-Parser::parseMarchTest(const std::string& filename)
+Parser::parseMarchTest_menu(const std::string& filename)
 {
     std::ifstream ifs(filename);
     if (!ifs) throw std::runtime_error("無法開啟檔案: " + filename);
@@ -220,6 +220,80 @@ Parser::parseMarchTest(const std::string& filename)
     }
     return result;
 }
+
+std::vector<MarchElement>
+Parser::parseMarchTest(const std::string& filename)
+{
+    std::ifstream ifs(filename);
+    if (!ifs) throw std::runtime_error("無法開啟檔案: " + filename);
+
+    json jf;  ifs >> jf;
+    if (!jf.is_object()) throw std::runtime_error("marchTest.json 根節點必須是 object");
+    marchTestName_ = jf.at("name").get<std::string>();
+    std::string pattern = jf.at("pattern").get<std::string>();
+    /* ───────────────────────────────────────────────────── */
+
+    /* ── ② 將 pattern 字串拆解成 MarchElement ─────────── */
+    std::vector<MarchElement> result;
+    std::stringstream segSS(pattern);
+    std::string seg;
+
+    int elemIdx = 0;
+    int overallIdx = 0;                     // 全域遞增 op 編號
+
+    while (std::getline(segSS, seg, ';')) {
+        // 去空白
+        seg.erase(std::remove_if(seg.begin(), seg.end(), ::isspace), seg.end());
+        if (seg.empty()) continue;
+
+        // 解析 direction 字元 ('b'/'a'/'d') 與括號
+        char dirC = std::tolower(seg[0]);
+        Direction dir;
+        if      (dirC == 'a') dir = Direction::ASC;
+        else if (dirC == 'd') dir = Direction::DESC;
+        else if (dirC == 'b') dir = Direction::BOTH;
+        else throw std::runtime_error("未知 direction: " + seg);
+
+        auto l = seg.find('(');
+        auto r = seg.find(')', l);
+        if (l == std::string::npos || r == std::string::npos || r <= l + 1)
+            throw std::runtime_error("pattern 格式錯誤：" + seg);
+
+        std::string opList = seg.substr(l + 1, r - l - 1);
+
+        // 分割成個別 token
+        std::vector<std::string> tokens;
+        std::stringstream tokSS(opList);
+        std::string tok;
+        while (std::getline(tokSS, tok, ',')) {
+            tok.erase(std::remove_if(tok.begin(), tok.end(), ::isspace), tok.end());
+            if (!tok.empty()) tokens.push_back(tok);
+        }
+
+        // 建立 MarchElement
+        MarchElement elem;
+        elem.elemIdx_   = elemIdx;
+        elem.addrOrder_ = dir;
+
+        int opLocalIdx = 0;
+        for (const auto& tk : tokens) {
+            for (SingleOp sop : explodeOpToken(tk)) {
+                
+                PositionedOp po{ sop,
+                                 { elemIdx,
+                                   opLocalIdx,
+                                   overallIdx++ } };
+                elem.ops_.push_back(std::move(po));
+            }
+            ++opLocalIdx;
+        }
+
+        result.push_back(std::move(elem));
+        ++elemIdx;
+    }
+    return result;
+}
+
 // ─────────────── writeDetectionReport ─────────────────────────────────
 void Parser::writeDetectionReport(const std::vector<FaultConfig>& faults,
                                   double detectedRate,
