@@ -1,13 +1,10 @@
 ############################################################
 # docker/Dockerfile ── Rocky Linux 8 + GCC 13 (C++20)
-#   • 透過 build-arg 控制 install_weak_deps
+#   • Control install_weak_deps via build-arg
 ############################################################
 
 ################ Stage 1 : build ################
 FROM rockylinux:8 AS build
-
-# ↓↓↓ 新增可選 build 參數（true / false）
-ARG INSTALL_WEAK_DEPS=true
 
 RUN dnf -y update && \
     dnf -y install epel-release dnf-plugins-core && \
@@ -26,8 +23,6 @@ RUN . /opt/rh/gcc-toolset-13/enable && \
 
 ################ Stage 2 : runtime ##############
 FROM rockylinux:8
-
-ARG INSTALL_WEAK_DEPS=true   # 同樣帶入第二階段（供 dnf 使用）
 
 RUN dnf -y update && \
     dnf -y install epel-release && \
