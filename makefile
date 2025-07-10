@@ -1,9 +1,12 @@
 # ======== 參數 ========
 CXX       := g++
-CXXFLAGS  := -std=c++20 -O2 -Wall -Wextra -g
+COMMON_FLAGS := -std=c++20 -Wall -Wextra
 INCLUDES  := -Iinclude
 LDFLAGS   :=    
 OUT 	 := Fault_simulator.exe
+RELEASE_FLAGS := -O3 -DNDEBUG
+DEBUG_OUT := $(OUT:.exe=_debug.exe)
+DEBUG_FLAGS := -O0 -g3 -fno-omit-frame-pointer -fno-inline-functions -gdwarf-4 -frtti           
 
                                 
 # ======== 自動偵測 ========
@@ -28,7 +31,13 @@ endif
 # ======== 一般編譯 ========
 # make com → 編譯整套程式
 com: $(OBJS)
-	$(CXX) $(CXXFLAGS) $(INCLUDES) $(SRC_CPP) -o $(OUT) $(LDFLAGS)
+	$(CXX) $(COMMON_FLAGS) $(RELEASE_FLAGS) $(INCLUDES) $(SRC_CPP) -o $(OUT) $(LDFLAGS)
+
+# ======== 除錯編譯 ========
+# make debug → 編譯整套程式，並產生除錯版本
+debug: $(OBJS)
+	$(CXX) $(COMMON_FLAGS) $(DEBUG_FLAGS) $(INCLUDES) $(SRC_CPP) -o $(DEBUG_OUT) $(LDFLAGS)
+
 
 # make run → 執行 Fault_simulator
 # 需要提供 faults.json、marchTest.json 和輸出檔案名稱

@@ -5,24 +5,19 @@
       "name": "C++ Debug (gdb)",
       "type": "cppdbg",
       "request": "launch",
-      "program": "/home/bb232399/CIM/Simulator/main",
-      "args": ["fault.json", "marchTest.json"],
+      "program": "/home/bb232399/CIM/Simulator/Fault_simulator_debug.exe",
+      "args": ["input/fault.json", "input/March-LSD.json", "output/Detection_report_test.txt"],
       "stopAtEntry": false,
       "cwd": "/home/bb232399/CIM/Simulator",
       "MIMode": "gdb",
       "miDebuggerPath": "/usr/bin/gdb",
       "environment": [],
       "setupCommands": [
-        { // ① 開啟 STL pretty-printing
-          "description": "Enable libstdc++ pretty printers",
-          "text": "-enable-pretty-printing",
-          "ignoreFailures": true
-        },
-        { // ② 讓 gdb 載入 xmethods（如果你的發行版沒有自動載入）
-          "text": "python import sys,os; p='/usr/share/gcc-13/python';\n if p not in sys.path: sys.path.insert(0,p);\n from libstdcxx.v6.printers import register_libstdcxx_printers;\n from libstdcxx.v6.xmethods import register_libstdcxx_xmethods;\n register_libstdcxx_printers(None); register_libstdcxx_xmethods(None)",
-          "ignoreFailures": true
-        }
+          { "text": "-enable-pretty-printing" },  // STL 智慧指標解碼
+          { "text": "set print pretty on" },      // 分行、縮排
+          { "text": "set print object on" }       // ☆ 顯示 real dynamic type
       ],
+      "logging": { "engineLogging": false },
       // ③（選擇性）自訂 Natvis，可放多個
       "visualizerFile": "${workspaceFolder}/.vscode/stl.natvis",
       "externalConsole": false

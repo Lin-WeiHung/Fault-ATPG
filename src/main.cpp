@@ -7,7 +7,7 @@ int main(int argc, char* argv[])
 {
     if (argc < 4) {
         std::cerr << "Usage: " << argv[0] << 
-        " <faults.json> <marchTest.json> <detection_report.txt> [rows] [cols] [seed]\n";
+        " <faults.json> <marchTest.json> <detection_report.txt>\n";
         return 1;
     }
 
